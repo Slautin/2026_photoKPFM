@@ -1,0 +1,7 @@
+descriptor,n,median_relative_difference_als_vs_linear,max_abs_rank_shift,baseline_dependent_wells_rank_shift_ge_10
+total_area_500_850,13,0.08099653749404244,1.0,0
+short_area,13,0.0007383706888244388,1.0,0
+intermediate_area,13,0.621792430061933,4.0,0
+long_area,13,0.06346494039890219,5.5,0
+long_fraction,13,0.01685350743650038,4.5,0
+dominant_peak_intensity,13,-0.008558100478018674,2.0,0

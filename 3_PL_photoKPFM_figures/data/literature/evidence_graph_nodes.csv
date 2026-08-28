@@ -1,0 +1,141 @@
+node_id,node_type,label,doi,relationship_id,attributes_json
+evidencerecord:090ce71ab0ac9d50,EvidenceRecord,R15,10.1002/advs.202518676,R15,"{""source_table"": ""Table S4""}"
+evidencerecord:2979144b8aa9f134,EvidenceRecord,R12,10.1002/advs.202400117,R12,"{""source_table"": ""Table S4""}"
+evidencerecord:422fea803bbacb61,EvidenceRecord,R07,10.34133/research.0196,R07,"{""source_table"": ""Table S4""}"
+evidencerecord:448c471d0a3a7003,EvidenceRecord,R02,10.20517/energymater.2025.183,R02,"{""source_table"": ""Table S4""}"
+evidencerecord:4c6bbad52cc4fe7d,EvidenceRecord,R10,10.1002/anie.202424041,R10,"{""source_table"": ""Table S4""}"
+evidencerecord:54b893820f7d9e19,EvidenceRecord,R01,10.20517/energymater.2025.183,R01,"{""source_table"": ""Table S4""}"
+evidencerecord:5bd650f3ccb68b94,EvidenceRecord,R14,10.1002/advs.202400117,R14,"{""source_table"": ""Table S4""}"
+evidencerecord:61045c77e5668941,EvidenceRecord,R13,10.1002/advs.202400117,R13,"{""source_table"": ""Table S4""}"
+evidencerecord:65d88955f16ad2d0,EvidenceRecord,R16,10.1002/advs.202518676,R16,"{""source_table"": ""Table S4""}"
+evidencerecord:6b79dc5a8438ff76,EvidenceRecord,R09,10.1002/anie.202424041,R09,"{""source_table"": ""Table S4""}"
+evidencerecord:bdca828d8c409948,EvidenceRecord,R05,10.1002/advs.202521518,R05,"{""source_table"": ""Table S4""}"
+evidencerecord:c60baaa2bf4abb63,EvidenceRecord,R06,10.1002/advs.202203210,R06,"{""source_table"": ""Table S4""}"
+evidencerecord:e1628fda3895cfbc,EvidenceRecord,R04,10.1002/advs.202521518,R04,"{""source_table"": ""Table S4""}"
+evidencerecord:ecf6aaf3998b4079,EvidenceRecord,R03,10.1002/advs.202521518,R03,"{""source_table"": ""Table S4""}"
+evidencerecord:fea434fd4034b695,EvidenceRecord,R11,10.1002/anie.202424041,R11,"{""source_table"": ""Table S4""}"
+kpfmobservation:1596af69bef5017c,KPFMObservation,"CPD-distribution standard deviation
+24.8 mV (control) and 11.3 mV (compound 2).",10.1002/anie.202424041,R10,{}
+kpfmobservation:40a10e50351b65fd,KPFMObservation,"surface-potential variation
+Approximately 80 mV (control) versus 10 mV (BAAc RT); both RT treatments reduced heterogeneity.",10.1002/advs.202400117,R12,{}
+kpfmobservation:41bb380f6af26b65,KPFMObservation,"contact potential difference (CPD)
+-0.768, -0.782, and -0.863 V respectively",10.1002/advs.202521518,R04,{}
+kpfmobservation:51a75a62c5e223f2,KPFMObservation,"surface-potential distribution
+Modified HTLs showed higher surface potential and a more uniform distribution.",10.1002/advs.202518676,R15,{}
+kpfmobservation:54e889e953284b60,KPFMObservation,"contact potential difference (CPD)
+Larger for the GHJ film than for the control.",10.34133/research.0196,R07,{}
+kpfmobservation:6a9bf7d89c85a65b,KPFMObservation,"CPD between GBs and GIs
+cannot be clearly distinguished",10.1002/advs.202203210,R06,{}
+kpfmobservation:81905b2d749b514c,KPFMObservation,"surface-potential variation
+Approximately 80 mV (control) versus 10 mV (BAAc RT); both RT treatments reduced heterogeneity.",10.1002/advs.202400117,R14,{}
+kpfmobservation:8274d4e704455143,KPFMObservation,"KPFM-derived surface work function
+4.77 eV (control); negligible change with compound 1; 4.68 eV with compound 2.",10.1002/anie.202424041,R11,{}
+kpfmobservation:830c37cabde87e4d,KPFMObservation,"contact potential difference (CPD)
+increases sequentially",10.20517/energymater.2025.183,R01,{}
+kpfmobservation:873e0ad6ce4c0d62,KPFMObservation,"contact potential difference (CPD)
+increases sequentially",10.20517/energymater.2025.183,R02,{}
+kpfmobservation:abaac9714dae671d,KPFMObservation,"surface-potential variation
+Approximately 80 mV (control) versus 10 mV (BAAc RT).",10.1002/advs.202400117,R13,{}
+kpfmobservation:b3c10566dd902cb0,KPFMObservation,"mean contact potential difference (CPD)
+−0.768, −0.782, and −0.863 V, respectively",10.1002/advs.202521518,R03,{}
+kpfmobservation:c1e1a0c6e3f25a28,KPFMObservation,"surface-potential distribution
+Modified HTLs showed higher surface potential and a more uniform distribution.",10.1002/advs.202518676,R16,{}
+kpfmobservation:d0d96f73ba411657,KPFMObservation,"CPD-distribution full width at half maximum (FWHM)
+Decreased after 3,7-Br and 2,8-Br treatment.",10.1002/advs.202521518,R05,{}
+kpfmobservation:da49d88ac8365c53,KPFMObservation,"KPFM-derived surface work function
+4.77 eV (control); negligible change with compound 1; 4.68 eV with compound 2.",10.1002/anie.202424041,R09,{}
+paper:465f738b00115c4c,Paper,Graded Heterojunction Improves Wide-Bandgap Perovskite for Highly Efficient 4-Terminal Perovskite/Silicon Tandem Solar Cells,10.34133/research.0196,,"{""doi"": ""10.34133/research.0196""}"
+paper:5fafef756e7f90e6,Paper,Room Temperature Ionic Liquid Capping Layer for High Efficiency FAPbI 3 Perovskite Solar Cells with Long‐Term Stability,10.1002/advs.202400117,,"{""doi"": ""10.1002/advs.202400117""}"
+paper:7277234653dea00c,Paper,Imidazole Post‐Treated Self‐Assembled Monolayers for Inverted Perovskite Solar Cells,10.1002/advs.202518676,,"{""doi"": ""10.1002/advs.202518676""}"
+paper:8941058fb1e23bdd,Paper,Pure 2D Perovskite Formation by Interfacial Engineering Yields a High Open‐Circuit Voltage beyond 1.28 V for 1.77‐eV Wide‐Bandgap Perovskite Solar Cells,10.1002/advs.202203210,,"{""doi"": ""10.1002/advs.202203210""}"
+paper:9335e4a63c9d432e,Paper,Modulating Perovskite Surface Energetics Through Tuneable Ferrocene Interlayers for High‐Performance Perovskite Solar Cells,10.1002/anie.202424041,,"{""doi"": ""10.1002/anie.202424041""}"
+paper:ae8f56ed469ac7ab,Paper,Regioisomeric Effects on Enhancing p ‐Type Characteristics of Self‐Assembled Molecules in Inverted Perovskite Solar Cells,10.1002/advs.202521518,,"{""doi"": ""10.1002/advs.202521518""}"
+paper:e0645a8801a181e2,Paper,Electron-donor/-acceptor ratio-guided molecular engineering for buried interface optimization in n-i-p perovskite solar cells,10.20517/energymater.2025.183,,"{""doi"": ""10.20517/energymater.2025.183""}"
+proposedliteratureinterpretation:0101eba05438dc5f,ProposedLiteratureInterpretation,"TRPL reports passivation-related carrier decay, while KPFM-derived work function reports energetic tuning across the same treatment series.",10.1002/anie.202424041,R11,"{""interpretation_limit"": ""KPFM and luminescence measurements used corresponding treatment groups but separate specimens/geometries. Co-trending does not establish that the work-function change caused the luminescence response.""}"
+proposedliteratureinterpretation:1b740c33d93582c5,ProposedLiteratureInterpretation,The pair connects an energetic/electrostatic change to its carrier-kinetic response in the same treatment comparison.,10.20517/energymater.2025.183,R02,"{""interpretation_limit"": ""Lifetime direction is context dependent: shorter decay can indicate faster extraction or stronger recombination. Co-observation is not causation.""}"
+proposedliteratureinterpretation:2c303ac186dfd036,ProposedLiteratureInterpretation,"KPFM maps energetic uniformity, while PL mapping reports the spatial uniformity of charge extraction for the same interlayer series.",10.1002/anie.202424041,R10,"{""interpretation_limit"": ""The maps were not spatially registered. In the C60-contacted PL stack, lower PL was interpreted as stronger extraction rather than as poorer emissive quality; the association is noncausal.""}"
+proposedliteratureinterpretation:304d8f21e2985564,ProposedLiteratureInterpretation,"KPFM reports treatment-dependent electrostatic uniformity, while interfacial TRPL reports extraction/recombination kinetics for corresponding treatment groups.",10.1002/advs.202400117,R14,"{""interpretation_limit"": ""KPFM and TRPL used corresponding treatments but different sample stacks/geometries. Shorter interfacial TRPL can reflect faster extraction or recombination; the association is noncausal.""}"
+proposedliteratureinterpretation:38b1f82cef3a1f3d,ProposedLiteratureInterpretation,The pair distinguishes electrostatic uniformity from emissive uniformity and tests whether both respond to the same treatment.,10.1002/advs.202518676,R15,"{""interpretation_limit"": ""Matched fields of view are needed for a spatial claim; ensemble co-trends alone are not causal evidence.""}"
+proposedliteratureinterpretation:53bc3daad9b32b68,ProposedLiteratureInterpretation,The pair tests whether energetic-interface modification is accompanied by a change in emissive quality.,10.20517/energymater.2025.183,R01,"{""interpretation_limit"": ""PL intensity also depends on excitation, absorption, thickness, collection, and stack geometry. Co-observation is not causation.""}"
+proposedliteratureinterpretation:65363f1f9647ab05,ProposedLiteratureInterpretation,The pair distinguishes electrostatic uniformity from emissive uniformity and tests whether both respond to the same treatment.,10.1002/advs.202400117,R13,"{""interpretation_limit"": ""Matched fields of view are needed for a spatial claim; ensemble co-trends alone are not causal evidence.""}"
+proposedliteratureinterpretation:70cc86214840d42b,ProposedLiteratureInterpretation,The pair links where electrostatic heterogeneity occurs to how long carriers persist or how rapidly they transfer.,10.1002/advs.202518676,R16,"{""interpretation_limit"": ""Spatial scales and sampled regions may differ, and lifetime direction remains mechanism dependent. Co-observation is not causation.""}"
+proposedliteratureinterpretation:bfa606835601e4c1,ProposedLiteratureInterpretation,"KPFM reports treatment-dependent interfacial potential, while PL reports the emissive response of perovskite grown on the same treatment groups.",10.1002/advs.202521518,R03,"{""interpretation_limit"": ""KPFM characterized the treated SAM surfaces, whereas PL used perovskite layers on the corresponding substrates. The treatment comparison is matched, but the measurement fields/specimens differ; co-observation is not causation.""}"
+proposedliteratureinterpretation:c22617b3a414fc86,ProposedLiteratureInterpretation,The pair connects an energetic/electrostatic change to its carrier-kinetic response in the same treatment comparison.,10.1002/advs.202521518,R04,"{""interpretation_limit"": ""KPFM characterized the treated SAM surfaces, whereas PL used perovskite layers on the corresponding substrates. The treatment comparison is matched, but the measurement fields/specimens differ; co-observation is not causation.""}"
+proposedliteratureinterpretation:c731625de361ed28,ProposedLiteratureInterpretation,"KPFM reports the treatment-dependent surface-potential shift, while TRPL reports carrier-decay kinetics for the same film series.",10.34133/research.0196,R07,"{""interpretation_limit"": ""The measurements were performed on corresponding film groups, not a spatially registered field. Longer lifetime can reflect suppressed recombination but does not establish a causal CPD pathway.""}"
+proposedliteratureinterpretation:e8e87869ebdf8a40,ProposedLiteratureInterpretation,The pair connects an energetic/electrostatic change to its carrier-kinetic response in the same treatment comparison.,10.1002/advs.202203210,R06,"{""interpretation_limit"": ""Lifetime direction is context dependent: shorter decay can indicate faster extraction or stronger recombination. Co-observation is not causation.""}"
+proposedliteratureinterpretation:ec93bebc6ecbadf9,ProposedLiteratureInterpretation,"CPD-distribution width reports energetic uniformity, while PL reports the emissive response to the same treatment series.",10.1002/advs.202521518,R05,"{""interpretation_limit"": ""KPFM characterized the treated SAM surfaces, whereas PL used perovskite layers on the corresponding substrates. The treatment comparison is matched, but the measurement fields/specimens differ; co-observation is not causation.""}"
+proposedliteratureinterpretation:f4b6ed01276f5014,ProposedLiteratureInterpretation,The pair distinguishes electrostatic uniformity from emissive uniformity and tests whether both respond to the same treatment.,10.1002/advs.202400117,R12,"{""interpretation_limit"": ""Matched fields of view are needed for a spatial claim; ensemble co-trends alone are not causal evidence.""}"
+proposedliteratureinterpretation:fb052e82b69a2af7,ProposedLiteratureInterpretation,PL distinguishes the passivation-related emissive response from KPFM-derived work-function tuning across the same treatment series.,10.1002/anie.202424041,R09,"{""interpretation_limit"": ""KPFM and luminescence measurements used corresponding treatment groups but separate specimens/geometries. Co-trending does not establish that the work-function change caused the luminescence response.""}"
+samplecomparison:040fe3cbbf05b15f,SampleComparison,"FAPbI3 control, BAI RT, and BAAc RT-treated films",10.1002/advs.202400117,R12,{}
+samplecomparison:0ca6d85a5888e73a,SampleComparison,FAPbI3 control versus BAAc RT-treated films,10.1002/advs.202400117,R13,{}
+samplecomparison:1b543ac93bbc0c0b,SampleComparison,"control to AA, ABA, and DBA",10.20517/energymater.2025.183,R01,{}
+samplecomparison:2eba67175ec98711,SampleComparison,"FTO/Me-4PACz, FTO/Me-4PACz/3,7-Br, and FTO/Me-4PACz/2,8-Br treatment series",10.1002/advs.202521518,R05,{}
+samplecomparison:4a1dee3e64733c34,SampleComparison,"control NiOx/Me-4PACz versus 4,5-DI and 4,5-D-2-MI-modified HTLs",10.1002/advs.202518676,R16,{}
+samplecomparison:4c088b2a757a6fdf,SampleComparison,WBG perovskite film with GHJ versus control without GHJ,10.34133/research.0196,R07,{}
+samplecomparison:504cb6a283c7ad1a,SampleComparison,"control to AA, ABA, and DBA",10.20517/energymater.2025.183,R02,{}
+samplecomparison:50b29d14f5f2ff4c,SampleComparison,"FAPbI3 control, BAI RT, and BAAc RT treatment series",10.1002/advs.202400117,R14,{}
+samplecomparison:5ecf0d915b659879,SampleComparison,"control NiOx/Me-4PACz versus 4,5-DI and 4,5-D-2-MI-modified HTLs",10.1002/advs.202518676,R15,{}
+samplecomparison:68557d97b7507f7d,SampleComparison,"FTO/Me-4PACz, FTO/Me-4PACz/3,7-Br, and FTO/Me-4PACz/2,8-Br treatment series",10.1002/advs.202521518,R03,{}
+samplecomparison:6cad1f9aa4badca8,SampleComparison,PEABr post-treatment at 60 °C,10.1002/advs.202203210,R06,{}
+samplecomparison:94acae4f51064107,SampleComparison,"unpassivated control, compound 1, and compound 2-treated perovskite films",10.1002/anie.202424041,R11,{}
+samplecomparison:b431e72992207b3c,SampleComparison,unpassivated control versus compound 2-treated perovskite films,10.1002/anie.202424041,R10,{}
+samplecomparison:e5d9ef20737fc97e,SampleComparison,"unpassivated control, compound 1, and compound 2-treated perovskite films",10.1002/anie.202424041,R09,{}
+samplecomparison:e9e31f79e86da140,SampleComparison,"FTO/Me-4PACz, FTO/Me-4PACz/3,7-Br, and FTO/Me-4PACz/2,8-Br films",10.1002/advs.202521518,R04,{}
+scientificclaim:0a8ac53aa9962db8,ScientificClaim,"Both Fc compounds increased steady-state PL intensity, whereas a substantial KPFM-derived work-function decrease occurred only with compound 2.",10.1002/anie.202424041,R09,{}
+scientificclaim:189f232bd584c25b,ScientificClaim,"The modified HTL series showed higher and more uniform surface potential, while the 4,5-D-2-MI-treated film showed higher PL intensity.",10.1002/advs.202518676,R15,{}
+scientificclaim:27e35a169ac2c942,ScientificClaim,Interfacial-potential or electric-field changes co-occur with changes in carrier decay or extraction kinetics.,10.1002/advs.202203210,R06,{}
+scientificclaim:2b228bf38bf32315,ScientificClaim,The GHJ film showed a larger CPD and a longer average TRPL lifetime than the control film.,10.34133/research.0196,R07,{}
+scientificclaim:4663d616a3a72243,ScientificClaim,BAAc RT reduced surface-potential heterogeneity and yielded the shortest interfacial TRPL decay in the same treatment series.,10.1002/advs.202400117,R14,{}
+scientificclaim:49e63aea6032a8be,ScientificClaim,The strongest narrowing of the CPD distribution (compound 2) accompanied the strongest and most spatially uniform PL quenching at the perovskite/C60 interface.,10.1002/anie.202424041,R10,{}
+scientificclaim:585a8349bfe082cd,ScientificClaim,The modified HTL series showed higher and more uniform surface potential together with longer TRPL carrier lifetime.,10.1002/advs.202518676,R16,{}
+scientificclaim:6dac43d567a3eab8,ScientificClaim,"Surface-potential magnitude or uniformity changes co-occur with changes in emission intensity, yield, or homogeneity.",10.1002/advs.202400117,R12,{}
+scientificclaim:6db0961db9b3fdec,ScientificClaim,"Surface-potential magnitude or uniformity changes co-occur with changes in emission intensity, yield, or homogeneity.",10.1002/advs.202400117,R13,{}
+scientificclaim:a879a8ac508a6a96,ScientificClaim,"Across the same treatment series, the more-negative mean CPD values after 3,7-Br and 2,8-Br treatment accompanied increased steady-state PL intensity.",10.1002/advs.202521518,R03,{}
+scientificclaim:ae9d4a3f3c58f4a7,ScientificClaim,"Both Fc compounds lengthened the average carrier lifetime, whereas a substantial KPFM-derived work-function decrease occurred only with compound 2.",10.1002/anie.202424041,R11,{}
+scientificclaim:b2b67476e8926631,ScientificClaim,"Narrower CPD distributions after 3,7-Br and 2,8-Br treatment accompanied increased PL intensity in the corresponding treatment groups.",10.1002/advs.202521518,R05,{}
+scientificclaim:b829a888fcc6f2d5,ScientificClaim,Interfacial-potential or electric-field changes co-occur with changes in carrier decay or extraction kinetics.,10.20517/energymater.2025.183,R02,{}
+scientificclaim:d3911039768ec2ef,ScientificClaim,Interfacial-potential changes co-occur with changes in radiative emission yield or net non-radiative loss.,10.20517/energymater.2025.183,R01,{}
+scientificclaim:e5c95c52f764c574,ScientificClaim,Interfacial-potential or electric-field changes co-occur with changes in carrier decay or extraction kinetics.,10.1002/advs.202521518,R04,{}
+steadystateplobservation:2361cc225c2f62ed,SteadyStatePLObservation,"steady-state PL intensity
+Increased for compounds 1 and 2 relative to the control.
+Steady-state PL intensity is directly relevant to the present optical comparison.",10.1002/anie.202424041,R09,"{""measured_in_present_study"": true}"
+steadystateplobservation:3d1d885aee3ece91,SteadyStatePLObservation,"steady-state PL intensity
+The 4,5-D-2-MI-treated perovskite film exhibited higher intensity.
+Steady-state PL intensity is directly relevant to the present optical comparison.",10.1002/advs.202518676,R15,"{""measured_in_present_study"": true}"
+steadystateplobservation:3fb28269a958db73,SteadyStatePLObservation,"steady-state PL intensity
+Increased further after 3,7-Br or 2,8-Br treatment relative to the Me-4PACz control.
+Steady-state PL intensity is directly relevant to the present optical comparison.",10.1002/advs.202521518,R05,"{""measured_in_present_study"": true}"
+steadystateplobservation:44d5a458b753295e,SteadyStatePLObservation,"steady-state PL intensity
+Increased further after 3,7-Br or 2,8-Br treatment relative to the Me-4PACz control.
+Steady-state PL intensity is directly relevant to the present optical comparison.",10.1002/advs.202521518,R03,"{""measured_in_present_study"": true}"
+steadystateplobservation:53284664e4d85922,SteadyStatePLObservation,"PLQY
+5.51% (control), 10.76% (AA), 11.70% (ABA), and 12.52% (DBA)
+Steady-state PL intensity is the closest analogue measured here; PLQY was not measured.",10.20517/energymater.2025.183,R01,"{""measured_in_present_study"": true}"
+steadystateplobservation:57763e2b7ba44327,SteadyStatePLObservation,"PL-mapping intensity and spatial distribution
+Compound 2 showed a substantial mean decrease and much-improved homogeneity relative to the control in C60-contacted stacks.",10.1002/anie.202424041,R10,"{""measured_in_present_study"": true}"
+steadystateplobservation:69227c1d529c46c4,SteadyStatePLObservation,"PL-mapping intensity and spatial uniformity
+BAAc RT exceeded the control and BAI RT films and showed stronger emission with minimal fluctuation.",10.1002/advs.202400117,R12,"{""measured_in_present_study"": true}"
+steadystateplobservation:92b252c7aae6bd31,SteadyStatePLObservation,"steady-state PL intensity
+The BAAc RT-treated film was nearly twice as intense as the control.
+Steady-state PL intensity is directly relevant to the present optical comparison.",10.1002/advs.202400117,R13,"{""measured_in_present_study"": true}"
+trplcontextobservation:2485a776ed9a24a6,TRPLContextObservation,"TRPL average carrier lifetime
+1046 ns (control), 1175 ns (compound 1), and 1525 ns (compound 2)
+Broader carrier-dynamics context; not directly measured in the present study.",10.1002/anie.202424041,R11,"{""measured_in_present_study"": false}"
+trplcontextobservation:5d3ec4095d54d9bc,TRPLContextObservation,"carrier lifetime (τavg)
+2951 ns (Me-4PACz control), 4080 ns (3,7-Br), and 4278 ns (2,8-Br)
+Broader carrier-dynamics context; not directly measured in the present study.",10.1002/advs.202521518,R04,"{""measured_in_present_study"": false}"
+trplcontextobservation:65d541d7d3ffe63c,TRPLContextObservation,"carrier lifetime (τavg)
+659.18 ns (PEABr-60), versus 449.46 ns (control), 622.12 ns (PEABr-25), and 551.75 ns (PEABr-100)
+Broader carrier-dynamics context; not directly measured in the present study.",10.1002/advs.202203210,R06,"{""measured_in_present_study"": false}"
+trplcontextobservation:6efce7525baf9daa,TRPLContextObservation,"TRPL carrier lifetime
+Longer for the modified films, with the greatest enhancement for 4,5-D-2-MI.
+Broader carrier-dynamics context; not directly measured in the present study.",10.1002/advs.202518676,R16,"{""measured_in_present_study"": false}"
+trplcontextobservation:96d2a9ed0b01a157,TRPLContextObservation,"TRPL average carrier lifetime
+231.12 ns (GHJ) versus 92.31 ns (control); PbI2-rich intermediate: 173.91 ns.
+Broader carrier-dynamics context; not directly measured in the present study.",10.34133/research.0196,R07,"{""measured_in_present_study"": false}"
+trplcontextobservation:c174f753ff0cd124,TRPLContextObservation,"carrier lifetime (τavg)
+162.00 ns (control), 139.66 ns (AA), 90.77 ns (ABA), and 3.35 ns (DBA)
+Broader carrier-dynamics context; not directly measured in the present study.",10.20517/energymater.2025.183,R02,"{""measured_in_present_study"": false}"
+trplcontextobservation:f392ee3c8e05bc67,TRPLContextObservation,"interfacial TRPL average lifetime
+12.85 ns (control/HTL), 7.19 ns (BAI RT/HTL), and 6.62 ns (BAAc RT/HTL)
+Broader carrier-dynamics context; not directly measured in the present study.",10.1002/advs.202400117,R14,"{""measured_in_present_study"": false}"

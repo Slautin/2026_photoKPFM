@@ -1,0 +1,7 @@
+literature_kpfm_class,literature_pl_class,relationship_count,experiment_kpfm_variables,experiment_pl_variables,alignment_level,interpretation_limit
+Contact potential difference,Carrier lifetime / TRPL,4,mu_dark_V; mu_light_V; photovoltage_signed_V,not measured in matched table,partial,Co-measurement supports complementary interpretation only; it does not establish a causal KPFM-to-PL pathway.
+Contact potential difference,PL intensity / PLQY,3,mu_dark_V; mu_light_V; photovoltage_signed_V,Top_PL_peak_intensity,related,Co-measurement supports complementary interpretation only; it does not establish a causal KPFM-to-PL pathway.
+Surface potential,Carrier lifetime / TRPL,2,mu_dark_V; mu_light_V,not measured in matched table,partial,Co-measurement supports complementary interpretation only; it does not establish a causal KPFM-to-PL pathway.
+Surface potential,PL intensity / PLQY,4,mu_dark_V; mu_light_V,Top_PL_peak_intensity,related,Co-measurement supports complementary interpretation only; it does not establish a causal KPFM-to-PL pathway.
+Work function,Carrier lifetime / TRPL,2,mu_dark_V; mu_light_V,not measured in matched table,partial,Co-measurement supports complementary interpretation only; it does not establish a causal KPFM-to-PL pathway.
+Work function,PL intensity / PLQY,1,mu_dark_V; mu_light_V,Top_PL_peak_intensity,proxy,Co-measurement supports complementary interpretation only; it does not establish a causal KPFM-to-PL pathway.

@@ -1,0 +1,47 @@
+Scientific corrections incorporated in current Tables S2 and S3
+================================================================
+
+Historical source document: source supplementary tables (not redistributed)
+Source SHA-256: 04653b7dc686bcdd834f0ef8c48ecd7e7545c79ec66e15c48e200c7fa9a36d0b
+Current machine-readable sources:
+- data/literature/table_s3_relationship_summary.csv (current Table S2)
+- data/literature/table_s4_retained_relationships.csv (current Table S3)
+Current combined document: results/tables/supplementary_tables_current_manuscript_S1-S4.docx
+
+Scope and verification
+----------------------
+- Historical Table S3 count corrections are published as current Table S2.
+- Historical Table S4 record corrections are published as current Table S3.
+- Current Table S1 is the ternary photoKPFM acquisition log, and current Table S4 contains exploratory association statistics; neither was part of the historical literature-table correction.
+- Each retained relationship was checked against the traceable source excerpts extracted from the original article. Ambiguous rows were also checked against the publisher full text or open-access primary article.
+- Final retained set: 15 relationships from 7 papers.
+- All retained relationships remain complementary-only; none is presented as a validated causal pathway.
+
+Row-level decisions
+-------------------
+R01 — CORRECTED, RETAINED. Expanded PLQY to the full directly reported control/AA/ABA/DBA series (5.51%, 10.76%, 11.70%, 12.52%). DOI: 10.20517/energymater.2025.183.
+R02 — CORRECTED, RETAINED. Expanded average carrier lifetime to the full directly reported series (162.00, 139.66, 90.77, 3.35 ns). DOI: 10.20517/energymater.2025.183.
+R03 — CORRECTED, RETAINED. Replaced the mismatched no-SAM/control PL comparison with the directly matched statement that PL intensity increased further after 3,7-Br or 2,8-Br treatment in the same Me-4PACz treatment series. DOI: 10.1002/advs.202521518.
+R04 — RETAINED; DIRECT VALUES CLARIFIED. The mean CPD series and TRPL lifetimes (2951, 4080, 4278 ns) refer to the same Me-4PACz/3,7-Br/2,8-Br treatment series. DOI: 10.1002/advs.202521518.
+R05 — CORRECTED, RETAINED. Replaced the mismatched PL comparison with the directly matched 3,7-Br/2,8-Br PL increase; retained CPD-distribution FWHM as the KPFM observable. DOI: 10.1002/advs.202521518.
+R06 — RETAINED; DIRECT VALUES CLARIFIED. PEABr-60 has indistinguishable grain-boundary/grain-interior CPD and a 659.18 ns lifetime; the directly reported control/temperature series is included for context. DOI: 10.1002/advs.202203210.
+R07 — CORRECTED, RETAINED. Replaced a method-only TRPL statement with the direct average lifetimes: 92.31 ns control, 173.91 ns PbI2-rich intermediate, and 231.12 ns GHJ. DOI: 10.34133/research.0196.
+R08 — REMOVED. The 4.25 to 4.17 eV work-function change was measured by UPS, not KPFM. The value −0.08 eV was a change magnitude rather than a work function, and the remaining direct KPFM-TRPL comparison duplicated R07. DOI: 10.34133/research.0196.
+R09 — CORRECTED AND RECLASSIFIED, RETAINED. Corrected “surface potential = 4.77 eV” to KPFM-derived surface work function: 4.77 eV control, negligible change with compound 1, and 4.68 eV with compound 2. Paired with the directly reported increase in steady-state PL intensity for compounds 1 and 2. DOI: 10.1002/anie.202424041.
+R10 — CORRECTED AND RECLASSIFIED, RETAINED. Narrowed the relationship to the directly matched control-versus-compound-2 comparison: CPD-distribution standard deviation was 24.8 versus 11.3 mV, paired with the directly reported compound-2 PL-mapping intensity/homogeneity response in C60-contacted stacks. DOI: 10.1002/anie.202424041.
+R11 — CORRECTED, RETAINED. Replaced the implied TRPL wording with directly reported average lifetimes of 1046 ns control, 1175 ns compound 1, and 1525 ns compound 2; corrected the KPFM result to the measured work-function series. DOI: 10.1002/anie.202424041.
+R12 — CLARIFIED, RETAINED. Identified the optical result as PL-mapping intensity and spatial uniformity for the control/BAI RT/BAAc RT treatment series. DOI: 10.1002/advs.202400117.
+R13 — CLARIFIED, RETAINED. Identified the optical result as ensemble steady-state PL intensity, nearly doubled for BAAc RT versus control. DOI: 10.1002/advs.202400117.
+R14 — CORRECTED, RETAINED. Replaced the mismatched BAAc RT-versus-BAAc TA bare-film lifetime with the directly matched interfacial TRPL treatment series: 12.85 ns control, 7.19 ns BAI RT, and 6.62 ns BAAc RT. The different KPFM/TRPL sample stacks are stated as a limitation. DOI: 10.1002/advs.202400117.
+R15 — CLARIFIED, RETAINED. Limited the PL statement to the directly reported higher steady-state intensity of the 4,5-D-2-MI-treated film; no numerical value was inferred. DOI: 10.1002/advs.202518676.
+R16 — CLARIFIED, RETAINED. Limited the TRPL statement to the directly reported longer lifetime in modified films, greatest for 4,5-D-2-MI; no numerical value was inferred. DOI: 10.1002/advs.202518676.
+
+Revised current Table S2 counts
+-------------------------------
+Contact potential difference + Carrier lifetime/TRPL: 4 (unchanged)
+Contact potential difference + PL intensity/PLQY: 4 (was 3)
+Surface potential + Carrier lifetime/TRPL: 2 (unchanged)
+Surface potential + PL intensity/PLQY: 3 (was 4)
+Work function + Carrier lifetime/TRPL: 1 (was 2)
+Work function + PL intensity/PLQY: 1 (unchanged)
+Total: 15 (was 16)

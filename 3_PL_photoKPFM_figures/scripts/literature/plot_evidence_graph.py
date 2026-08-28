@@ -15,18 +15,18 @@ from matplotlib.patches import FancyArrowPatch, Rectangle
 
 
 ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_NODES = ROOT / "data" / "literature" / "knowledge_graph_node_counts_corrected.csv"
-DEFAULT_EDGES = ROOT / "data" / "literature" / "knowledge_graph_edge_counts_corrected.csv"
+DEFAULT_NODES = ROOT / "data" / "literature" / "evidence_graph_nodes.csv"
+DEFAULT_EDGES = ROOT / "data" / "literature" / "evidence_graph_edges.csv"
 DEFAULT_RELATIONSHIPS = ROOT / "data" / "literature" / "table_s4_retained_relationships.csv"
-DEFAULT_OUTPUT = ROOT / "results" / "figures" / "main" / "figure_photokpfm_knowledge_graph_corrected"
+DEFAULT_OUTPUT = ROOT / "results" / "figures" / "supplementary" / "FigureS6_evidence_graph"
 
 COLORS = {"teal": "#2A9D8F", "dark": "#252A31"}
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Plot the corrected KPFM-PL literature evidence graph.")
-    parser.add_argument("--node-counts", type=Path, default=DEFAULT_NODES)
-    parser.add_argument("--edge-counts", type=Path, default=DEFAULT_EDGES)
+    parser.add_argument("--nodes", type=Path, default=DEFAULT_NODES)
+    parser.add_argument("--edges", type=Path, default=DEFAULT_EDGES)
     parser.add_argument("--relationships", type=Path, default=DEFAULT_RELATIONSHIPS)
     parser.add_argument("--output-stem", type=Path, default=DEFAULT_OUTPUT)
     return parser.parse_args()
@@ -59,56 +59,120 @@ def save_figure(figure: plt.Figure, stem: Path) -> None:
     plt.close(figure)
 
 
-def plot_knowledge_graph(node_counts: pd.DataFrame, edge_counts: pd.DataFrame, stem: Path) -> None:
+def aggregate_graph(
+    nodes: pd.DataFrame,
+    edges: pd.DataFrame,
+) -> tuple[dict[str, int], dict[tuple[str, str, str], int]]:
+    required_node_columns = {"node_id", "node_type"}
+    required_edge_columns = {"source_id", "relationship", "target_id", "causal_status"}
+    missing_nodes = sorted(required_node_columns.difference(nodes.columns))
+    missing_edges = sorted(required_edge_columns.difference(edges.columns))
+    if missing_nodes or missing_edges:
+        raise ValueError(
+            f"Missing graph columns: nodes={missing_nodes}; edges={missing_edges}"
+        )
+    if nodes["node_id"].duplicated().any():
+        raise ValueError("Evidence graph contains duplicate node identifiers.")
+    if set(edges["causal_status"].astype(str)) != {"complementary_only"}:
+        raise ValueError("Every evidence-graph edge must remain complementary-only.")
+    node_type_by_id = nodes.set_index("node_id")["node_type"].astype(str)
+    typed_edges = edges.copy()
+    typed_edges["source_type"] = typed_edges["source_id"].map(node_type_by_id)
+    typed_edges["target_type"] = typed_edges["target_id"].map(node_type_by_id)
+    if typed_edges[["source_type", "target_type"]].isna().any().any():
+        raise ValueError("Evidence graph contains an edge with a missing endpoint node.")
+    node_counts = nodes["node_type"].astype(str).value_counts().to_dict()
+    edge_counts = (
+        typed_edges.groupby(["source_type", "relationship", "target_type"])
+        .size()
+        .astype(int)
+        .to_dict()
+    )
+    expected_nodes = {
+        "Paper": 7,
+        "SampleComparison": 15,
+        "KPFMObservation": 15,
+        "SteadyStatePLObservation": 8,
+        "TRPLContextObservation": 7,
+        "ScientificClaim": 15,
+        "ProposedLiteratureInterpretation": 15,
+        "EvidenceRecord": 15,
+    }
+    expected_edges = {
+        ("Paper", "REPORTS_COMPARISON", "SampleComparison"): 15,
+        ("SampleComparison", "HAS_KPFM_OBSERVATION", "KPFMObservation"): 15,
+        ("SampleComparison", "HAS_OPTICAL_OBSERVATION", "SteadyStatePLObservation"): 8,
+        ("SampleComparison", "HAS_OPTICAL_OBSERVATION", "TRPLContextObservation"): 7,
+        ("KPFMObservation", "COMPLEMENTS", "SteadyStatePLObservation"): 8,
+        ("KPFMObservation", "COMPLEMENTS", "TRPLContextObservation"): 7,
+        ("KPFMObservation", "SUPPORTS_CLAIM", "ScientificClaim"): 15,
+        ("SteadyStatePLObservation", "SUPPORTS_CLAIM", "ScientificClaim"): 8,
+        ("TRPLContextObservation", "SUPPORTS_CLAIM", "ScientificClaim"): 7,
+        (
+            "ScientificClaim",
+            "INTERPRETED_AS",
+            "ProposedLiteratureInterpretation",
+        ): 15,
+        ("EvidenceRecord", "SUPPORTS", "ScientificClaim"): 15,
+    }
+    if node_counts != expected_nodes:
+        raise ValueError(f"Unexpected canonical node counts: {node_counts}")
+    if edge_counts != expected_edges:
+        raise ValueError(f"Unexpected canonical edge counts: {edge_counts}")
+    if sum(node_counts.values()) != 97 or sum(edge_counts.values()) != 120:
+        raise ValueError("Canonical evidence graph must contain 97 nodes and 120 edges.")
+    return node_counts, edge_counts
+
+
+def plot_knowledge_graph(
+    node_counts: dict[str, int],
+    edge_counts: dict[tuple[str, str, str], int],
+    stem: Path,
+) -> None:
     positions = {
         "Paper": (0.065, 0.55),
-        "SampleContext": (0.215, 0.55),
+        "SampleComparison": (0.215, 0.55),
         "KPFMObservation": (0.405, 0.73),
         "SteadyStatePLObservation": (0.405, 0.45),
-        "TRPLObservation": (0.405, 0.15),
+        "TRPLContextObservation": (0.405, 0.15),
         "ScientificClaim": (0.665, 0.55),
-        "MechanismConcept": (0.895, 0.67),
-        "Evidence": (0.895, 0.35),
+        "ProposedLiteratureInterpretation": (0.895, 0.67),
+        "EvidenceRecord": (0.895, 0.35),
     }
     display = {
         "Paper": "Paper",
-        "SampleContext": "Sample context",
+        "SampleComparison": "Sample comparisons",
         "KPFMObservation": "KPFM observations",
         "SteadyStatePLObservation": "Steady-state PL / PLQY",
-        "TRPLObservation": "TRPL / carrier lifetime\nliterature context",
+        "TRPLContextObservation": "TRPL / carrier lifetime\nliterature context",
         "ScientificClaim": "Scientific claims",
-        "MechanismConcept": "Proposed literature\ninterpretations",
-        "Evidence": "Evidence excerpts",
+        "ProposedLiteratureInterpretation": "Proposed literature\ninterpretations",
+        "EvidenceRecord": "Evidence records",
     }
     colors = {
         "Paper": "#4C78A8",
-        "SampleContext": "#72B7B2",
+        "SampleComparison": "#72B7B2",
         "KPFMObservation": "#E45756",
         "SteadyStatePLObservation": "#F2CF5B",
-        "TRPLObservation": "#FFF4CC",
+        "TRPLContextObservation": "#FFF4CC",
         "ScientificClaim": "#B279A2",
-        "MechanismConcept": "#59A14F",
-        "Evidence": "#9D9D9D",
+        "ProposedLiteratureInterpretation": "#59A14F",
+        "EvidenceRecord": "#9D9D9D",
     }
     dimensions = {
         "Paper": (0.105, 0.115),
-        "SampleContext": (0.135, 0.115),
+        "SampleComparison": (0.145, 0.115),
         "KPFMObservation": (0.155, 0.115),
         "SteadyStatePLObservation": (0.175, 0.125),
-        "TRPLObservation": (0.185, 0.135),
+        "TRPLContextObservation": (0.185, 0.135),
         "ScientificClaim": (0.150, 0.115),
-        "MechanismConcept": (0.190, 0.135),
-        "Evidence": (0.155, 0.115),
-    }
-    counts = node_counts.set_index("node_type")["count"].astype(int).to_dict()
-    lookup = {
-        (str(row.source_type), str(row.relationship), str(row.target_type)): int(row["count"])
-        for _, row in edge_counts.iterrows()
+        "ProposedLiteratureInterpretation": (0.190, 0.135),
+        "EvidenceRecord": (0.155, 0.115),
     }
     figure, axis = plt.subplots(figsize=(7.4, 3.85))
 
     def count(source: str, relationship: str, target: str) -> int:
-        return lookup.get((source, relationship, target), 0)
+        return edge_counts.get((source, relationship, target), 0)
 
     def boundary(node_type: str, side: str) -> tuple[float, float]:
         xpos, ypos = positions[node_type]
@@ -170,20 +234,21 @@ def plot_knowledge_graph(node_counts: pd.DataFrame, edge_counts: pd.DataFrame, s
                 zorder=3,
             )
 
-    edge("Paper", "SampleContext", "REPORTS_SAMPLE", "right", "left", "reports", (0.140, 0.635))
-    edge("SampleContext", "KPFMObservation", "HAS_KPFM_OBSERVATION", "upper_right", "left", "has KPFM", (0.305, 0.815))
-    edge("SampleContext", "SteadyStatePLObservation", "HAS_PL_OBSERVATION", "lower_right", "left", "has PL", (0.300, 0.365))
-    edge("SampleContext", "TRPLObservation", "HAS_PL_OBSERVATION", "bottom", "left", "reported TRPL", (0.265, 0.285), dashed=True, curve=-0.12)
-    edge("ScientificClaim", "KPFMObservation", "LINKS_KPFM", "upper_left", "right", "claim links", (0.555, 0.690), arrowstyle="<-")
-    edge("ScientificClaim", "SteadyStatePLObservation", "LINKS_PL", "lower_left", "right", "claim links", (0.555, 0.475), arrowstyle="<-")
-    edge("ScientificClaim", "TRPLObservation", "LINKS_PL", "bottom", "right", "broader context", (0.575, 0.285), dashed=True, curve=0.10, arrowstyle="<-")
+    edge("Paper", "SampleComparison", "REPORTS_COMPARISON", "right", "left", "reports", (0.140, 0.635))
+    edge("SampleComparison", "KPFMObservation", "HAS_KPFM_OBSERVATION", "upper_right", "left", "has KPFM", (0.305, 0.815))
+    edge("SampleComparison", "SteadyStatePLObservation", "HAS_OPTICAL_OBSERVATION", "lower_right", "left", "has PL", (0.300, 0.365))
+    edge("SampleComparison", "TRPLContextObservation", "HAS_OPTICAL_OBSERVATION", "bottom", "left", "reported TRPL", (0.265, 0.285), dashed=True, curve=-0.12)
+    edge("KPFMObservation", "ScientificClaim", "SUPPORTS_CLAIM", "right", "upper_left", "claim links", (0.555, 0.690))
+    edge("SteadyStatePLObservation", "ScientificClaim", "SUPPORTS_CLAIM", "right", "lower_left", "claim links", (0.555, 0.475))
+    edge("TRPLContextObservation", "ScientificClaim", "SUPPORTS_CLAIM", "right", "bottom", "broader context", (0.575, 0.285), dashed=True, curve=-0.10)
     edge("KPFMObservation", "SteadyStatePLObservation", "COMPLEMENTS", "bottom", "top", "complementary links", (0.405, 0.590), color=COLORS["teal"], arrowstyle="<->")
-    edge("ScientificClaim", "MechanismConcept", "INTERPRETED_AS", "upper_right", "left", "proposed as", (0.785, 0.765))
-    edge("ScientificClaim", "Evidence", "SUPPORTED_BY", "lower_right", "left", "supports", (0.800, 0.430), arrowstyle="<-")
+    edge("KPFMObservation", "TRPLContextObservation", "COMPLEMENTS", "right", "right", "context links", (0.500, 0.335), dashed=True, curve=-0.42, arrowstyle="<->")
+    edge("ScientificClaim", "ProposedLiteratureInterpretation", "INTERPRETED_AS", "upper_right", "left", "proposed as", (0.785, 0.765))
+    edge("EvidenceRecord", "ScientificClaim", "SUPPORTS", "left", "lower_right", "supports", (0.800, 0.430))
 
     for node_type, (xpos, ypos) in positions.items():
         width, height = dimensions[node_type]
-        context = node_type == "TRPLObservation"
+        context = node_type == "TRPLContextObservation"
         axis.add_patch(
             Rectangle(
                 (xpos - width / 2, ypos - height / 2),
@@ -196,11 +261,11 @@ def plot_knowledge_graph(node_counts: pd.DataFrame, edge_counts: pd.DataFrame, s
                 zorder=4,
             )
         )
-        dark_text = node_type in {"SampleContext", "SteadyStatePLObservation", "TRPLObservation"}
+        dark_text = node_type in {"SampleComparison", "SteadyStatePLObservation", "TRPLContextObservation"}
         axis.text(
             xpos,
             ypos,
-            f"{display[node_type]}\n(n={int(counts.get(node_type, 0))})",
+            f"{display[node_type]}\n(n={int(node_counts.get(node_type, 0))})",
             ha="center",
             va="center",
             fontsize=8.2,
@@ -234,7 +299,17 @@ def verify_svg(svg_path: Path) -> None:
     visible_text = " ".join(text.strip() for text in root.itertext() if text.strip())
     if re.search(r"\b16\b", visible_text):
         raise ValueError("Corrected graph still contains a visible retained-relationship count of 16.")
-    for required in ("Scientific claims", "(n=15)", "claim links (15)"):
+    for required in (
+        "Scientific claims",
+        "Sample comparisons",
+        "(n=15)",
+        "Steady-state PL / PLQY",
+        "(n=8)",
+        "TRPL / carrier lifetime",
+        "(n=7)",
+        "claim links (15)",
+        "context links (7)",
+    ):
         if required not in visible_text:
             raise ValueError(f"Corrected graph is missing required visible text: {required}")
 
@@ -246,14 +321,9 @@ def main() -> None:
         raise ValueError("The corrected source table must contain 15 retained relationships.")
     if set(relationships["causal_status"].astype(str)) != {"complementary_only"}:
         raise ValueError("All retained relationships must remain complementary-only.")
-    node_counts = pd.read_csv(args.node_counts)
-    edge_counts = pd.read_csv(args.edge_counts)
-    scientific_claims = int(node_counts.loc[node_counts["node_type"].eq("ScientificClaim"), "count"].iloc[0])
-    if scientific_claims != 15:
-        raise ValueError("ScientificClaim node count must be 15.")
-    stale_edges = edge_counts.loc[pd.to_numeric(edge_counts["count"], errors="coerce").eq(16)]
-    if not stale_edges.empty:
-        raise ValueError("Corrected edge counts still contain a retained-relationship count of 16.")
+    nodes = pd.read_csv(args.nodes)
+    edges = pd.read_csv(args.edges)
+    node_counts, edge_counts = aggregate_graph(nodes, edges)
     configure_plotting()
     plot_knowledge_graph(node_counts, edge_counts, args.output_stem)
     verify_svg(args.output_stem.with_suffix(".svg"))

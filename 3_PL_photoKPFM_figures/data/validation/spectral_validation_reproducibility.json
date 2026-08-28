@@ -1,0 +1,32 @@
+{
+  "raw_pl_csv": "data/raw/pl_plate_reader_export.csv",
+  "project_root": ".",
+  "output_folder": "results/validation/spectral_processing",
+  "matched_timepoint": 22,
+  "matched_time_min_existing_convention": 189,
+  "pl_photokpfm_relationship_scope": "nominally matched replicate libraries, not same physical droplets",
+  "wavelength_regions_nm": {
+    "short": [
+      500.0,
+      620.0
+    ],
+    "intermediate": [
+      620.0,
+      720.0
+    ],
+    "long": [
+      720.0,
+      850.0
+    ]
+  },
+  "baseline_methods": [
+    "linear_edge",
+    "als"
+  ],
+  "late_loss_step_checked": [
+    20,
+    21
+  ],
+  "skipped_fully_empty_pl_blocks": 16,
+  "start_datetime_from_file_header": "2026-03-05 16:57:08"
+}

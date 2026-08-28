@@ -1,0 +1,6 @@
+well_id,legend_label,FAPbI3_pct,BDAPbI4_pct,PEA2PbI4_pct,legend_title,note
+G1,0/24/76,0,24,76,"Nominal composition (FAPbI3/BDAPbI4/PEA2PbI4, %)",Well IDs retained for traceability but intentionally omitted from plotted legend.
+B11,24/72/4,24,72,4,"Nominal composition (FAPbI3/BDAPbI4/PEA2PbI4, %)",Well IDs retained for traceability but intentionally omitted from plotted legend.
+C12,96/0/4,96,0,4,"Nominal composition (FAPbI3/BDAPbI4/PEA2PbI4, %)",Well IDs retained for traceability but intentionally omitted from plotted legend.
+H11,72/24/4,72,24,4,"Nominal composition (FAPbI3/BDAPbI4/PEA2PbI4, %)",Well IDs retained for traceability but intentionally omitted from plotted legend.
+D5,56/0/44,56,0,44,"Nominal composition (FAPbI3/BDAPbI4/PEA2PbI4, %)",Well IDs retained for traceability but intentionally omitted from plotted legend.

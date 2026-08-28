@@ -1,0 +1,201 @@
+{
+  "status": "passed",
+  "mode": "manifest_refreshed",
+  "required_files": {
+    "required_files": 26,
+    "missing": 0
+  },
+  "names": {
+    "forbidden_names": 0
+  },
+  "relationships": {
+    "retained_relationships": 15,
+    "unique_papers": 7,
+    "causal_status": [
+      "complementary_only"
+    ]
+  },
+  "raw_data": {
+    "pl_wells": 96,
+    "pl_top_timepoints": 22,
+    "pl_parsed_rows": 2112,
+    "photokpfm_acquisition_pairs": 19,
+    "photokpfm_unique_wells": 13,
+    "pl_sha256": "17e8e9a92938bfb163d65779eab78957e56aeb0ad14edd1bc57dd0b54d629184",
+    "photokpfm_sha256": "3fcbd977f7efd962040cb51afda504b255722a4b7e7fc6080d1c527d9e523858"
+  },
+  "processed_data": {
+    "datasets": {
+      "pl_retention_metrics.csv": {
+        "rows": 96,
+        "unique_identifiers": 96,
+        "sha256": "8244e2539e71d23311b609d7a76cc0179c0e776da131b0a133c3b2d1eb008df3"
+      },
+      "plate_composition_map.csv": {
+        "rows": 96,
+        "unique_identifiers": 96,
+        "sha256": "bf0fa69f1d675873592f6a29423f734585629a336cb3bdf46cdefaf25d9075c9"
+      },
+      "matched_pl_photokpfm_metrics.csv": {
+        "rows": 13,
+        "unique_identifiers": 13,
+        "sha256": "18ea89f44774f85b59f7a63460dfb6a22dc859f76c48c78c513d97737f9b24b2"
+      },
+      "candidate_rank_comparison.csv": {
+        "rows": 13,
+        "unique_identifiers": 13,
+        "sha256": "834ae60748a98957791394de2be57f2a1bd88f3878000f86190000ad9c4821a9"
+      },
+      "representative_pl_trace_selection.csv": {
+        "rows": 13,
+        "unique_identifiers": 13,
+        "sha256": "636dbbb29ec3f3dab7d5fe268ee30d9ae7cb91ab5f438e531919e2c6293d3ab1"
+      },
+      "representative_pl_traceability.csv": {
+        "rows": 5,
+        "unique_identifiers": 5,
+        "sha256": "7edb6ae1934033122e24854cc5820fd2c1514ee203f1508272a856ba4d97eae3"
+      },
+      "representative_pl_traces.csv": {
+        "rows": 110,
+        "unique_identifiers": 5,
+        "sha256": "48b8e7a12add7f4ce5c05bd59be2a2bd706f9bef045fa93e8b7eae07f226dde0"
+      },
+      "all_matched_pl_traces.csv": {
+        "rows": 286,
+        "unique_identifiers": 13,
+        "sha256": "35012a43967c767585d6f6fd125a36e589d60d918df1273e70fcb5e8844c9563"
+      },
+      "initial_phase_kpfm_table.csv": {
+        "rows": 13,
+        "unique_identifiers": 13,
+        "sha256": "a5a83dc877ab65ce7f45a1436f4835f6afef0dbc8dcfe92e752cb00ae751a07a"
+      },
+      "exploratory_association_statistics.csv": {
+        "rows": 36,
+        "unique_identifiers": null,
+        "sha256": "64e207cb04ca796381f2941f6afb3a4ba5177a00d71fc5f2a26ef5a12e677758"
+      },
+      "photokpfm_acquisition_log.csv": {
+        "rows": 19,
+        "unique_identifiers": 13,
+        "sha256": "a0109f2d81d1e8a7055b733868d5cbabd94381897360587f6b08d3f8ea13ffa0"
+      }
+    },
+    "pl_wells": 96,
+    "unique_nominal_compositions": 91,
+    "matched_wells": 13,
+    "representative_wells": [
+      "B11",
+      "C12",
+      "D5",
+      "G1",
+      "H11"
+    ]
+  },
+  "graph": {
+    "nodes": 97,
+    "edges": 120,
+    "node_type_counts": {
+      "EvidenceRecord": 15,
+      "KPFMObservation": 15,
+      "Paper": 7,
+      "ProposedLiteratureInterpretation": 15,
+      "SampleComparison": 15,
+      "ScientificClaim": 15,
+      "SteadyStatePLObservation": 8,
+      "TRPLContextObservation": 7
+    },
+    "edge_type_counts": {
+      "COMPLEMENTS": 15,
+      "HAS_KPFM_OBSERVATION": 15,
+      "HAS_OPTICAL_OBSERVATION": 15,
+      "INTERPRETED_AS": 15,
+      "REPORTS_COMPARISON": 15,
+      "SUPPORTS": 15,
+      "SUPPORTS_CLAIM": 30
+    },
+    "legacy_count_tables": {}
+  },
+  "ternary_source_data": {
+    "acquisitions": 19,
+    "unique_wells": 13,
+    "gp_grid_rows": 91,
+    "histogram_rows": 120,
+    "repeat_rows": 8,
+    "manifested_outputs": 26
+  },
+  "assets": {
+    "figure_stems": 14,
+    "figure_files": 42,
+    "author_supplied_figures": 2,
+    "ternary_source_files": 6,
+    "table_files": 2,
+    "supplementary_table_rows": {
+      "S1": 19,
+      "S2": 6,
+      "S3": 15,
+      "S4": 36
+    },
+    "manuscript_index": {
+      "indexed_assets": 16,
+      "required_manuscript_assets": 16,
+      "status_counts": {
+        "author-supplied-with-explicit-scope": 2,
+        "reproducible": 14
+      }
+    }
+  },
+  "python": {
+    "python_files": 11,
+    "syntax_valid": true,
+    "remaining_comments": [
+      {
+        "path": "scripts/analysis/analyze_pl_photokpfm_associations.py",
+        "line": 1,
+        "comment": "#!/usr/bin/env python3"
+      },
+      {
+        "path": "scripts/experimental/analyze_pl_metrics.py",
+        "line": 41,
+        "comment": "# noqa: E402"
+      },
+      {
+        "path": "scripts/experimental/validate_spectral_processing.py",
+        "line": 36,
+        "comment": "# noqa: E402"
+      }
+    ],
+    "nonessential_comments": 0,
+    "absolute_windows_paths": 0
+  },
+  "single_panel_sources": {
+    "active_plotting_entrypoints": [
+      "scripts/analysis/analyze_pl_photokpfm_associations.py",
+      "scripts/experimental/analyze_pl_metrics.py",
+      "scripts/experimental/validate_spectral_processing.py",
+      "scripts/literature/plot_evidence_graph.py",
+      "scripts/publication/generate_publication_figures.py",
+      "scripts/publication/generate_ternary_photokpfm_panels.py",
+      "scripts/validate_release.py"
+    ],
+    "notebook_plotting_cells": 1,
+    "multipanel_calls": 0
+  },
+  "notebook": {
+    "saved_outputs": 0,
+    "nonessential_code_comments": 0
+  },
+  "inventory": {
+    "files": 111,
+    "bytes": 28237253,
+    "exact_duplicate_groups": 0,
+    "manifest": {
+      "manifest_rows": 111,
+      "missing": 0,
+      "extra": 0,
+      "changed": 0
+    }
+  },
+  "failures": []
+}

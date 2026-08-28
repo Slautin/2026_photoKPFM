@@ -1,0 +1,30 @@
+{
+  "raw_pl_csv": "data/raw/pl_plate_reader_export.csv",
+  "project_root": ".",
+  "output_folder": "results/validation/pl_metrics",
+  "matched_timepoint": 22,
+  "matched_time_min_existing_convention": 189,
+  "timepoint_indexing": "starts at 1",
+  "baseline_low_range_nm": [
+    455.0,
+    485.0
+  ],
+  "baseline_high_range_nm": [
+    845.0,
+    870.0
+  ],
+  "metric_range_nm": [
+    455.0,
+    870.0
+  ],
+  "peak_search_range_nm": [
+    500.0,
+    850.0
+  ],
+  "smoothing_window_nm": 9,
+  "large_drop_fraction_threshold": -0.25,
+  "skipped_fully_empty_pl_blocks": 16,
+  "python_version": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "numpy_version": "2.4.5",
+  "pandas_version": "3.0.3"
+}

@@ -1,0 +1,101 @@
+{
+  "schema_version": "1.0",
+  "source_h5": "data/raw/photokpfm_measurements.h5",
+  "source_h5_sha256": "3fcbd977f7efd962040cb51afda504b255722a4b7e7fc6080d1c527d9e523858",
+  "historical_notebook_provenance": {
+    "name": "20260323_photoKPFM_ternary.ipynb",
+    "use": "Read-only provenance for measured-index selection, histogram analysis, and model class.",
+    "code_copied_into_release": false,
+    "historical_model": "BoTorch/GPyTorch exact GP, Matern-3/2 ARD kernel, normalized inputs, standardized response."
+  },
+  "surface_potential_extraction": {
+    "crop_pixels_each_edge": 10,
+    "histogram_bins": 30,
+    "histogram_range_v": [
+      -2.5,
+      -0.5
+    ],
+    "fit_function": "A * exp(-(x - mean)^2 / (2 * sigma^2))",
+    "response": "delta_SP = illuminated Gaussian mean - dark Gaussian mean",
+    "response_uncertainty": "sqrt(SE_dark_mean^2 + SE_illuminated_mean^2)",
+    "fit_uncertainty_source": "square root of Gaussian-fit covariance diagonal for the mean parameter"
+  },
+  "gaussian_process": {
+    "implementation": "Transparent exact GP implemented with NumPy and SciPy",
+    "kernel": "ARD Matern-3/2",
+    "input_transform": "per-coordinate min-max normalization from the 19 training acquisitions",
+    "outcome_transform": "sample-mean centering and sample-standard-deviation scaling",
+    "hyperparameter_fit": "deterministic five-start L-BFGS-B maximum log marginal likelihood",
+    "lengthscale_bounds_normalized_units": [
+      0.03,
+      0.7
+    ],
+    "signal_sd_bounds_standardized_units": [
+      0.05,
+      5.0
+    ],
+    "noise_sd_bounds_standardized_units": [
+      0.002,
+      2.0
+    ],
+    "lengthscales_normalized_units": [
+      0.32546507785641493,
+      0.7
+    ],
+    "signal_sd_standardized_units": 0.6109382107451119,
+    "noise_sd_standardized_units": 0.7277783508674333,
+    "training_response_mean_v": 0.06373364962424127,
+    "training_response_sample_sd_v": 0.06697540718268256,
+    "negative_log_marginal_likelihood": 24.09642751965987,
+    "optimizer_success": true,
+    "optimizer_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+    "optimizer_starts": 5,
+    "jitter_standardized_variance": 1e-09,
+    "reported_uncertainty": "latent GP posterior standard deviation, excluding observation noise",
+    "compatibility_caveat": "This SciPy reconstruction matches the historical GP model class but is not expected to be bitwise identical to BoTorch/GPyTorch hyperparameter fitting."
+  },
+  "representative_acquisition_position_expressions": [
+    1,
+    3,
+    -2,
+    -1
+  ],
+  "representative_acquisition_positions_zero_based": [
+    1,
+    3,
+    17,
+    18
+  ],
+  "repeat_location_plate_indices_zero_based": [
+    0,
+    78
+  ],
+  "panel_policy": "Every figure triplet has exactly one scientific data axis; color bars are ancillary scale axes.",
+  "outputs": [
+    "results/figures/main/Figure3_GP_mean_map.png",
+    "results/figures/main/Figure3_GP_mean_map.svg",
+    "results/figures/main/Figure3_GP_mean_map.pdf",
+    "results/figures/supplementary/FigureS2_GP_uncertainty_map.png",
+    "results/figures/supplementary/FigureS2_GP_uncertainty_map.svg",
+    "results/figures/supplementary/FigureS2_GP_uncertainty_map.pdf",
+    "results/figures/main/Figure3_representative_SP_histogram_1.png",
+    "results/figures/main/Figure3_representative_SP_histogram_1.svg",
+    "results/figures/main/Figure3_representative_SP_histogram_1.pdf",
+    "results/figures/main/Figure3_representative_SP_histogram_2.png",
+    "results/figures/main/Figure3_representative_SP_histogram_2.svg",
+    "results/figures/main/Figure3_representative_SP_histogram_2.pdf",
+    "results/figures/main/Figure3_representative_SP_histogram_3.png",
+    "results/figures/main/Figure3_representative_SP_histogram_3.svg",
+    "results/figures/main/Figure3_representative_SP_histogram_3.pdf",
+    "results/figures/main/Figure3_representative_SP_histogram_4.png",
+    "results/figures/main/Figure3_representative_SP_histogram_4.svg",
+    "results/figures/main/Figure3_representative_SP_histogram_4.pdf",
+    "results/figures/supplementary/FigureS1_repeat_location_variability.png",
+    "results/figures/supplementary/FigureS1_repeat_location_variability.svg",
+    "results/figures/supplementary/FigureS1_repeat_location_variability.pdf",
+    "results/source_data/ternary_photokpfm/photoKPFM_acquisitions_all_19.csv",
+    "results/source_data/ternary_photokpfm/Figure3_and_FigureS2_GP_grid_source_data.csv",
+    "results/source_data/ternary_photokpfm/Figure3_representative_histograms_source_data.csv",
+    "results/source_data/ternary_photokpfm/FigureS1_repeat_location_variability_source_data.csv"
+  ]
+}

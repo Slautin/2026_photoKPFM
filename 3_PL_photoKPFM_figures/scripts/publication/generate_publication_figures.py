@@ -336,74 +336,59 @@ def plot_trace_panel(
     )
     save_figure(figure, stem)
 
-def marker_sizes(values: pd.Series) -> np.ndarray:
+def marker_sizes(
+    values: pd.Series,
+    minimum: float | None = None,
+    maximum: float | None = None,
+) -> np.ndarray:
     numeric = pd.to_numeric(values, errors="coerce").to_numpy(float)
-    span = float(np.nanmax(numeric) - np.nanmin(numeric))
+    lower = float(np.nanmin(numeric)) if minimum is None else float(minimum)
+    upper = float(np.nanmax(numeric)) if maximum is None else float(maximum)
+    span = upper - lower
     if span <= 0:
         return np.full(len(numeric), 70.0)
-    return 42.0 + 105.0 * (numeric - np.nanmin(numeric)) / span
+    return 42.0 + 105.0 * (numeric - lower) / span
 
 def plot_matched_ternary(data: pd.DataFrame, stem: Path) -> None:
     figure, axis = plt.subplots(figsize=(6.5, 3.9))
     draw_ternary(axis)
     x, y = ternary_xy(data)
-    sizes = marker_sizes(data["matched_PL_intensity"])
+    intensities = pd.to_numeric(data["matched_PL_intensity"], errors="coerce")
+    intensity_min = float(intensities.min())
+    intensity_max = float(intensities.max())
+    sizes = marker_sizes(intensities, intensity_min, intensity_max)
     values = pd.to_numeric(data["abs_delta_SP"], errors="coerce")
-    markers = {
-        "Lower observed temporal variation": "o",
-        "Pronounced temporal evolution": "^",
-    }
-    scatter = None
-    for behavior, marker in markers.items():
-        mask = data["temporal_behavior_class"].eq(behavior).to_numpy()
-        scatter = axis.scatter(
-            x[mask],
-            y[mask],
-            s=np.maximum(sizes[mask], 48.0),
-            marker=marker,
-            c=values[mask],
-            cmap="magma",
-            vmin=float(values.min()),
-            vmax=float(values.max()),
-            edgecolors=COLORS["dark"],
-            linewidths=0.65,
-            zorder=3,
-        )
-    if scatter is None:
-        raise RuntimeError("No matched ternary data were plotted.")
+    scatter = axis.scatter(
+        x,
+        y,
+        s=np.maximum(sizes, 48.0),
+        marker="o",
+        c=values,
+        cmap="magma",
+        vmin=float(values.min()),
+        vmax=float(values.max()),
+        edgecolors=COLORS["dark"],
+        linewidths=0.65,
+        zorder=3,
+    )
     colorbar_axis = figure.add_axes([0.635, 0.18, 0.025, 0.67])
     colorbar = figure.colorbar(scatter, cax=colorbar_axis)
     colorbar.ax.set_title("photoKPFM\n" + r"$|\Delta SP|$ (V)", fontsize=7.5, pad=6)
     colorbar.ax.tick_params(labelsize=7.4, length=2.5)
 
-    behavior_handles = [
-        Line2D(
-            [],
-            [],
-            marker=marker,
-            linestyle="",
-            markerfacecolor="#B8BCC2",
-            markeredgecolor=COLORS["dark"],
-            markersize=5.8,
-            label=("Lower temporal variation" if "Lower" in behavior else "Pronounced evolution"),
-        )
-        for behavior, marker in markers.items()
-    ]
-    figure.legend(
-        handles=behavior_handles,
-        title="Temporal PL behavior",
-        loc="upper left",
-        bbox_to_anchor=(0.72, 0.49),
-        frameon=False,
-        fontsize=7.2,
-        title_fontsize=7.5,
-        borderaxespad=0,
-        handletextpad=0.5,
-    )
-    intensity_levels = np.array([0.1, 0.5, 1.0])
+    intensity_levels = np.quantile(intensities, [0.2, 0.5, 0.8])
     size_handles = []
     for value in intensity_levels:
-        size = max(float(marker_sizes(pd.Series([0.0, value, 1.0]))[1]), 48.0)
+        size = max(
+            float(
+                marker_sizes(
+                    pd.Series([value]),
+                    intensity_min,
+                    intensity_max,
+                )[0]
+            ),
+            48.0,
+        )
         size_handles.append(
             Line2D(
                 [],
@@ -413,14 +398,14 @@ def plot_matched_ternary(data: pd.DataFrame, stem: Path) -> None:
                 markerfacecolor="#C8CBD0",
                 markeredgecolor=COLORS["dark"],
                 markersize=math.sqrt(size) * 0.65,
-                label=f"{value:.1f}",
+                label=rf"{value / 1000.0:.0f}$\times 10^3$",
             )
         )
     figure.legend(
         handles=size_handles,
-        title="Normalized PL peak intensity\n" + r"$I_{PL}/I_{PL,max}$",
+        title="PL peak intensity at 189 min\n(a.u.)",
         loc="upper left",
-        bbox_to_anchor=(0.72, 0.84),
+        bbox_to_anchor=(0.72, 0.74),
         frameon=False,
         fontsize=7.2,
         title_fontsize=7.5,
@@ -451,159 +436,116 @@ def build_rank_table(data: pd.DataFrame) -> pd.DataFrame:
 
 def plot_rank_comparison(data: pd.DataFrame, stem: Path) -> pd.DataFrame:
     ranked = build_rank_table(data)
-    style = {
-        "font.family": "Arial",
-        "font.size": 9.5,
-        "axes.labelsize": 10.0,
-        "xtick.labelsize": 8.8,
-        "ytick.labelsize": 8.8,
-        "legend.fontsize": 8.0,
-        "axes.linewidth": 0.8,
-        "text.color": "#000000",
-        "axes.labelcolor": "#000000",
-        "axes.edgecolor": "#000000",
-        "xtick.color": "#000000",
-        "ytick.color": "#000000",
-        "savefig.facecolor": "white",
-        "figure.facecolor": "white",
-        "pdf.fonttype": 42,
-        "svg.fonttype": "none",
+    y = np.arange(len(ranked))
+    figure, axis = plt.subplots(figsize=(5.45, 4.35))
+    for index in range(len(ranked)):
+        if index % 2 == 0:
+            axis.axhspan(index - 0.5, index + 0.5, color="#F6F7F9", linewidth=0, zorder=0)
+    category_style = {
+        "Both in top 4": (COLORS["teal"], 2.2),
+        "PL at least 5 ranks higher": (COLORS["gold"], 2.2),
+        "photoKPFM at least 5 ranks higher": (COLORS["red"], 2.2),
+        "Other": (COLORS["gray"], 1.1),
     }
-    with plt.rc_context(style):
-        y = np.arange(len(ranked))
-        figure, axis = plt.subplots(figsize=(6.0, 4.35))
-        category_style = {
-            "Both in top 4": ("#2A9D8F", 2.2),
-            "PL at least 5 ranks higher": ("#E6A700", 2.2),
-            "photoKPFM at least 5 ranks higher": ("#C65D4B", 2.2),
-            "Other": ("#8A8F98", 1.1),
-        }
-        for index, row in ranked.iterrows():
-            if index % 2 == 0:
-                axis.axhspan(index - 0.5, index + 0.5, color="#F4F6F8", linewidth=0, zorder=0)
-            color, width = category_style[str(row["rank_category"])]
-            axis.plot(
-                [row["PL_rank"], row["photoKPFM_rank"]],
-                [index, index],
-                color=color,
-                linewidth=width,
-                solid_capstyle="round",
-                zorder=1,
-            )
-        axis.scatter(
-            ranked["PL_rank"],
-            y,
-            marker="s",
-            s=34,
-            color="#3B6FA5",
-            edgecolor="white",
-            linewidth=0.5,
-            label="PL intensity rank",
-            zorder=3,
+    for index, row in ranked.iterrows():
+        color, width = category_style[str(row["rank_category"])]
+        axis.plot(
+            [row["PL_rank"], row["photoKPFM_rank"]],
+            [index, index],
+            color=color,
+            linewidth=width,
+            solid_capstyle="round",
+            zorder=1,
         )
-        axis.scatter(
-            ranked["photoKPFM_rank"],
-            y,
-            marker="o",
-            s=34,
-            color="#E6A700",
-            edgecolor="white",
-            linewidth=0.5,
-            label=r"photoKPFM $|\Delta SP|$ rank",
-            zorder=3,
-        )
-        labels = [
-            f"{int(row.FAPbI3_pct)} / {int(row.BDAPbI4_pct)} / {int(row.PEA2PbI4_pct)}"
-            for row in ranked.itertuples(index=False)
-        ]
-        axis.set_yticks(y)
-        axis.set_yticklabels(labels, fontsize=8.0)
-        axis.invert_yaxis()
-        axis.set_xlim(0.5, len(ranked) + 0.5)
-        axis.set_xticks(range(1, len(ranked) + 1, 2))
-        axis.set_xlabel("Response rank (1 = strongest)")
-        axis.tick_params(axis="y", length=0, pad=4)
-        axis.grid(axis="x", color="#D9DEE5", linewidth=0.6)
-        axis.set_axisbelow(True)
-        axis.spines[["top", "right"]].set_visible(False)
-        measurement_legend = axis.legend(
-            frameon=False,
-            loc="lower center",
-            bbox_to_anchor=(0.5, 1.0),
-            ncol=2,
-        )
-        axis.add_artist(measurement_legend)
-        category_handles = [
-            Line2D([], [], color="#2A9D8F", linewidth=2.2, label="Both in top 4"),
-            Line2D([], [], color="#E6A700", linewidth=2.2, label="PL higher by at least 5 ranks"),
-            Line2D([], [], color="#C65D4B", linewidth=2.2, label="photoKPFM higher by at least 5 ranks"),
-            Line2D([], [], color="#8A8F98", linewidth=1.2, label="Other"),
-        ]
-        axis.legend(
-            handles=category_handles,
-            frameon=False,
-            loc="upper center",
-            bbox_to_anchor=(0.5, -0.15),
-            ncol=2,
-            fontsize=7.4,
-        )
-        figure.subplots_adjust(left=0.16, right=0.98, top=0.88, bottom=0.25)
-        save_figure(figure, stem)
-    return ranked
-
-def plot_association(
-    matched: pd.DataFrame,
-    associations: pd.DataFrame,
-    stem: Path,
-) -> None:
-    row = associations[
-        associations["kpfm_metric"].eq("photovoltage_abs_V")
-        & associations["pl_metric"].eq("Top_PL_peak_intensity")
-    ].iloc[0]
-    x = pd.to_numeric(matched["matched_PL_intensity"], errors="coerce").to_numpy(float) / 1000.0
-    y = pd.to_numeric(matched["abs_delta_SP"], errors="coerce").to_numpy(float)
-    yerr = pd.to_numeric(matched["delta_SP_se"], errors="coerce").to_numpy(float)
-    figure, axis = plt.subplots(figsize=(4.15, 3.35))
-    axis.errorbar(
-        x,
+    axis.scatter(
+        ranked["PL_rank"],
         y,
-        yerr=yerr,
-        fmt="o",
-        markersize=4.8,
-        markerfacecolor=COLORS["blue"],
-        markeredgecolor="white",
-        markeredgewidth=0.45,
-        ecolor="#7A8088",
-        elinewidth=0.75,
-        capsize=2,
+        marker="s",
+        s=34,
+        color=COLORS["blue"],
+        edgecolor="white",
+        linewidth=0.5,
+        label="PL peak intensity rank",
         zorder=3,
     )
-    coefficients = np.polyfit(x, y, 1)
-    xline = np.linspace(float(np.min(x)), float(np.max(x)), 200)
-    axis.plot(xline, np.polyval(coefficients, xline), color=COLORS["dark"], linewidth=1.0, zorder=2)
-    axis.set_xlabel(r"PL peak intensity at 189 min ($10^3$ a.u.)")
-    axis.set_ylabel(r"photoKPFM $|\Delta SP|$ (V)")
-    axis.grid(color="#E3E6EA", linewidth=0.55)
+    axis.scatter(
+        ranked["photoKPFM_rank"],
+        y,
+        marker="o",
+        s=34,
+        color=COLORS["orange"],
+        edgecolor="white",
+        linewidth=0.5,
+        label=r"photoKPFM $|\Delta SP|$ rank",
+        zorder=3,
+    )
+    labels = [
+        f"{int(float(row.FAPbI3_pct))} / {int(float(row.BDAPbI4_pct))} / {int(float(row.PEA2PbI4_pct))}"
+        for row in ranked.itertuples(index=False)
+    ]
+    axis.set_yticks(y)
+    axis.set_yticklabels(labels, fontsize=7.7, fontfamily="DejaVu Sans Mono")
+    axis.invert_yaxis()
+    axis.set_xlim(0.5, len(ranked) + 0.5)
+    axis.set_xticks(range(1, len(ranked) + 1, 2))
+    axis.set_xlabel("Response rank (1 = strongest)")
+    axis.tick_params(axis="y", length=0, pad=4)
+    axis.grid(axis="x", color="#DDE1E6", linewidth=0.6)
     axis.set_axisbelow(True)
     axis.spines[["top", "right"]].set_visible(False)
     axis.text(
-        0.03,
-        0.97,
-        f"n = {int(row['n'])}\n"
-        f"Raw Spearman $\\rho$ = {float(row['spearman_rho']):.3f}; "
-        f"$q_{{BH}}$ = {float(row['spearman_q_bh']):.3f}\n"
-        f"Composition-adjusted $\\rho$ = {float(row['partial_spearman_rho']):.3f}; "
-        f"$q_{{BH}}$ = {float(row['partial_spearman_q_bh']):.3f}",
+        -0.015,
+        1.015,
+        "FA / BDA / PEA (%)",
         transform=axis.transAxes,
-        va="top",
-        ha="left",
+        ha="right",
+        va="bottom",
         fontsize=7.4,
+        fontweight="bold",
         color=COLORS["dark"],
-        linespacing=1.18,
-        bbox={"facecolor": "white", "edgecolor": "#AEB4BC", "linewidth": 0.55, "pad": 2.5},
     )
-    figure.subplots_adjust(left=0.18, right=0.97, bottom=0.17, top=0.97)
+    measurement_legend = axis.legend(
+        loc="lower left",
+        bbox_to_anchor=(0, 1.005),
+        ncol=2,
+        frameon=False,
+        fontsize=7.5,
+        handletextpad=0.4,
+        columnspacing=1.0,
+        borderaxespad=0,
+    )
+    axis.add_artist(measurement_legend)
+    category_handles = [
+        Line2D([], [], color=COLORS["teal"], linewidth=2.2, label="Both in top 4"),
+        Line2D([], [], color=COLORS["gold"], linewidth=2.2, label=r"PL higher by $\geq$5 ranks"),
+        Line2D([], [], color=COLORS["red"], linewidth=2.2, label=r"photoKPFM higher by $\geq$5 ranks"),
+        Line2D([], [], color=COLORS["gray"], linewidth=1.2, label="Other"),
+    ]
+    axis.legend(
+        handles=category_handles,
+        loc="upper center",
+        bbox_to_anchor=(0.5, -0.14),
+        ncol=2,
+        frameon=False,
+        fontsize=7.1,
+        handlelength=2.0,
+        handletextpad=0.4,
+        columnspacing=1.1,
+        borderaxespad=0,
+    )
+    axis.text(
+        0.99,
+        0.985,
+        f"n = {len(ranked)} matched compositions",
+        transform=axis.transAxes,
+        ha="right",
+        va="top",
+        fontsize=7.2,
+        color=COLORS["muted"],
+    )
+    figure.subplots_adjust(left=0.275, right=0.985, bottom=0.22, top=0.88)
     save_figure(figure, stem)
+    return ranked
 
 def plot_plate_map(source: pd.DataFrame, stem: Path) -> None:
     rows = list("ABCDEFGH")
@@ -789,25 +731,13 @@ def main() -> None:
     plot_trace_panel(
         representative_traces,
         selected_wells,
-        main_dir / "Figure4C_representative_PL_time_traces",
+        supplementary_dir / "FigureS4_representative_PL_time_traces",
         full_set=False,
     )
-    full_order = (
-        selection.sort_values(["temporal_behavior_class", "relative_range", "well_id"])["well_id"]
-        .astype(str)
-        .tolist()
-    )
     full_error = validate_trace_endpoints(full_traces)
-    plot_trace_panel(
-        full_traces,
-        full_order,
-        supplementary_dir / "FigureS_all_13_PL_time_traces",
-        full_set=True,
-    )
     plot_matched_ternary(matched, main_dir / "Figure5A_matched_screening_space")
     ranks = plot_rank_comparison(matched, main_dir / "Figure5B_candidate_rank_comparison")
-    plot_association(matched, associations, supplementary_dir / "FigureS_PL_photoKPFM_association")
-    plot_plate_map(plate, supplementary_dir / "FigureS_plate_composition_map")
+    plot_plate_map(plate, supplementary_dir / "FigureS3_plate_composition_map")
 
     copied_sources = {
         "pl_retention_metrics.csv": retention_path,

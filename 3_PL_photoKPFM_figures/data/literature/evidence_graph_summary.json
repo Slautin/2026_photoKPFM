@@ -1,0 +1,11 @@
+{
+  "papers": 7,
+  "retained_relationships": 15,
+  "nodes": 97,
+  "edges": 120,
+  "causal_status": [
+    "complementary_only"
+  ],
+  "steady_state_relationships": 8,
+  "trpl_context_relationships": 7
+}

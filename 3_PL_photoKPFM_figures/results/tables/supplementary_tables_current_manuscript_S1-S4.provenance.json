@@ -1,0 +1,57 @@
+{
+  "status": "complete",
+  "generated_at_utc": "2026-08-28T18:03:43.116012+00:00",
+  "table_s1": {
+    "generated": true,
+    "rows": 19,
+    "sources": [
+      "data/raw/photokpfm_measurements.h5",
+      "data/processed/plate_composition_map.csv"
+    ],
+    "machine_readable_output": "data/processed/photokpfm_acquisition_log.csv",
+    "scope": "Paired acquisition order, plate/well identity, nominal composition, HDF5 acquisition IDs, pixel dimensions, and manuscript-stated ternary scan area. Exact timestamps and external calibration were not available and were not inferred."
+  },
+  "tables": {
+    "S1": {
+      "rows": 19,
+      "sources": [
+        "data/raw/photokpfm_measurements.h5",
+        "data/processed/plate_composition_map.csv"
+      ],
+      "machine_readable_output": "data/processed/photokpfm_acquisition_log.csv"
+    },
+    "S2": {
+      "rows": 6,
+      "source": "data/literature/table_s3_relationship_summary.csv"
+    },
+    "S3": {
+      "rows": 15,
+      "source": "data/literature/table_s4_retained_relationships.csv"
+    },
+    "S4": {
+      "rows": 36,
+      "source": "data/processed/exploratory_association_statistics.csv"
+    }
+  },
+  "source_sha256": {
+    "data/raw/photokpfm_measurements.h5": "3fcbd977f7efd962040cb51afda504b255722a4b7e7fc6080d1c527d9e523858",
+    "data/processed/plate_composition_map.csv": "bf0fa69f1d675873592f6a29423f734585629a336cb3bdf46cdefaf25d9075c9",
+    "data/literature/table_s3_relationship_summary.csv": "9d0d57b9df374cc00fbfc112f3d54129cbb7d411d55c21721dd8453d083ea104",
+    "data/literature/table_s4_retained_relationships.csv": "f37d4899a96a02792c207a3281826f16791e959951ea1174536babeb8d53a612",
+    "data/processed/exploratory_association_statistics.csv": "64e207cb04ca796381f2941f6afb3a4ba5177a00d71fc5f2a26ef5a12e677758"
+  },
+  "output": "supplementary_tables_current_manuscript_S1-S4.docx",
+  "output_sha256": "8ac4be3aba5024544369a9bc11b53916e4dcef5884cb22121d431073faf82b6d",
+  "table_s1_csv_sha256": "a0109f2d81d1e8a7055b733868d5cbabd94381897360587f6b08d3f8ea13ffa0",
+  "checks": {
+    "retained_relationships": 15,
+    "unique_relationship_ids": 15,
+    "photokpfm_acquisition_pairs": 19,
+    "photokpfm_unique_wells": 13,
+    "scan_pixels": "128 × 128",
+    "ternary_scan_area": "5 × 5 µm²",
+    "association_tests": 36,
+    "bh_significant_tests": 0,
+    "causal_claims_supported": 0
+  }
+}
