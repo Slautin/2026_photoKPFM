@@ -12,6 +12,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from matplotlib.patches import FancyArrowPatch, Rectangle
+from PIL import Image
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -20,7 +21,21 @@ DEFAULT_EDGES = ROOT / "data" / "literature" / "evidence_graph_edges.csv"
 DEFAULT_RELATIONSHIPS = ROOT / "data" / "literature" / "table_s4_retained_relationships.csv"
 DEFAULT_OUTPUT = ROOT / "results" / "figures" / "supplementary" / "FigureS6_evidence_graph"
 
-COLORS = {"teal": "#2A9D8F", "dark": "#252A31"}
+COLORS = {
+    "blue": "#0072B2",
+    "sky": "#3C8DBC",
+    "teal": "#009E73",
+    "amber": "#E69F00",
+    "orange": "#D55E00",
+    "purple": "#7B61A8",
+    "neutral": "#4B5563",
+    "pale": "#F4F6F8",
+    "dark": "#202124",
+}
+MM_PER_INCH = 25.4
+DPI = 600
+WIDTH_MM = 180.0
+HEIGHT_MM = 100.0
 
 
 def parse_args() -> argparse.Namespace:
@@ -35,7 +50,12 @@ def parse_args() -> argparse.Namespace:
 def configure_plotting() -> None:
     plt.rcParams.update(
         {
-            "font.family": "Arial",
+            "font.family": "serif",
+            "font.serif": ["Times New Roman", "Times", "Liberation Serif", "DejaVu Serif"],
+            "mathtext.fontset": "custom",
+            "mathtext.rm": "Times New Roman",
+            "mathtext.it": "Times New Roman:italic",
+            "mathtext.bf": "Times New Roman:bold",
             "font.size": 9.0,
             "axes.labelsize": 9.5,
             "xtick.labelsize": 8.5,
@@ -53,10 +73,15 @@ def configure_plotting() -> None:
 
 def save_figure(figure: plt.Figure, stem: Path) -> None:
     stem.parent.mkdir(parents=True, exist_ok=True)
-    figure.savefig(stem.with_suffix(".png"), dpi=600, bbox_inches="tight", facecolor="white")
-    figure.savefig(stem.with_suffix(".svg"), bbox_inches="tight", facecolor="white")
-    figure.savefig(stem.with_suffix(".pdf"), bbox_inches="tight", facecolor="white")
+    common = {"bbox_inches": None, "pad_inches": 0, "facecolor": "white"}
+    figure.savefig(stem.with_suffix(".png"), dpi=DPI, **common)
+    figure.savefig(stem.with_suffix(".svg"), dpi=DPI, **common)
+    figure.savefig(stem.with_suffix(".pdf"), dpi=DPI, **common)
     plt.close(figure)
+    with Image.open(stem.with_suffix(".png")) as image:
+        expected = (int(WIDTH_MM / MM_PER_INCH * DPI), int(HEIGHT_MM / MM_PER_INCH * DPI))
+        if image.size != expected:
+            raise ValueError(f"Corrected graph PNG is {image.size}; expected {expected}.")
 
 
 def aggregate_graph(
@@ -150,14 +175,14 @@ def plot_knowledge_graph(
         "EvidenceRecord": "Evidence records",
     }
     colors = {
-        "Paper": "#4C78A8",
-        "SampleComparison": "#72B7B2",
-        "KPFMObservation": "#E45756",
-        "SteadyStatePLObservation": "#F2CF5B",
-        "TRPLContextObservation": "#FFF4CC",
-        "ScientificClaim": "#B279A2",
-        "ProposedLiteratureInterpretation": "#59A14F",
-        "EvidenceRecord": "#9D9D9D",
+        "Paper": COLORS["blue"],
+        "SampleComparison": COLORS["teal"],
+        "KPFMObservation": COLORS["orange"],
+        "SteadyStatePLObservation": COLORS["amber"],
+        "TRPLContextObservation": COLORS["pale"],
+        "ScientificClaim": COLORS["purple"],
+        "ProposedLiteratureInterpretation": COLORS["teal"],
+        "EvidenceRecord": COLORS["neutral"],
     }
     dimensions = {
         "Paper": (0.105, 0.115),
@@ -169,7 +194,7 @@ def plot_knowledge_graph(
         "ProposedLiteratureInterpretation": (0.190, 0.135),
         "EvidenceRecord": (0.155, 0.115),
     }
-    figure, axis = plt.subplots(figsize=(7.4, 3.85))
+    figure, axis = plt.subplots(figsize=(WIDTH_MM / MM_PER_INCH, HEIGHT_MM / MM_PER_INCH))
 
     def count(source: str, relationship: str, target: str) -> int:
         return edge_counts.get((source, relationship, target), 0)
@@ -199,7 +224,7 @@ def plot_knowledge_graph(
         label: str | None = None,
         label_xy: tuple[float, float] | None = None,
         dashed: bool = False,
-        color: str = "#5C6168",
+        color: str = COLORS["neutral"],
         curve: float = 0,
         arrowstyle: str = "-|>",
     ) -> None:
@@ -228,8 +253,8 @@ def plot_knowledge_graph(
                 f"{label} ({value})",
                 ha="center",
                 va="center",
-                fontsize=7.4,
-                color="#42474E",
+                fontsize=7.5,
+                color=COLORS["dark"],
                 bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.97, "pad": 0.7},
                 zorder=3,
             )
@@ -255,13 +280,13 @@ def plot_knowledge_graph(
                 width,
                 height,
                 facecolor=colors[node_type],
-                edgecolor="#9A7415" if context else "white",
+                edgecolor=COLORS["amber"] if context else "white",
                 linewidth=1.15 if context else 0.75,
                 linestyle=(0, (4, 2)) if context else "-",
                 zorder=4,
             )
         )
-        dark_text = node_type in {"SampleComparison", "SteadyStatePLObservation", "TRPLContextObservation"}
+        dark_text = node_type in {"SteadyStatePLObservation", "TRPLContextObservation"}
         axis.text(
             xpos,
             ypos,
@@ -274,9 +299,9 @@ def plot_knowledge_graph(
             zorder=5,
         )
 
-    solid = Line2D([], [], color="#5C6168", linewidth=1.1, label="Evidence-linked path")
+    solid = Line2D([], [], color=COLORS["neutral"], linewidth=1.1, label="Evidence-linked path")
     complementary = Line2D([], [], color=COLORS["teal"], linewidth=1.8, label="Reported complementarity")
-    dashed = Line2D([], [], color="#5C6168", linewidth=1.1, linestyle=(0, (4, 3)), label="Literature context only")
+    dashed = Line2D([], [], color=COLORS["neutral"], linewidth=1.1, linestyle=(0, (4, 3)), label="Literature context only")
     axis.legend(
         handles=[solid, complementary, dashed],
         loc="lower center",
