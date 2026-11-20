@@ -17,6 +17,7 @@ The paths below are release-relative. Every reproducible stem has PNG, SVG, and 
 | Figure S4 | `gain60/figures/FigureS4_gain60` | Reproducible | Five gain-60 PL trajectories normalized by their respective maxima. | `gain60/reproduce.py` |
 | Figure S5 | `gain60/figures/FigureS5_gain60` | Reproducible | Gain-60 peak intensity versus archived photoKPFM shifts and fit errors. | `gain60/reproduce.py` |
 | Figure S6 | `results/figures/supplementary/FigureS6_evidence_graph` | Reproducible | `data/literature/evidence_graph_nodes.csv`; `data/literature/evidence_graph_edges.csv`; `data/literature/table_s4_retained_relationships.csv` | `scripts/literature/build_evidence_graph.py`; `scripts/literature/plot_evidence_graph.py` |
+| Figure S7 | `gain60/figure_s7/FigureS7_gain60` | Reproducible | `gain60/figure_s7/FigureS7_source_spectra.csv`, five top-read spectra at acquisition 22 (Read 64) with display normalization over 455–850 nm. | `gain60/figure_s7/FigureS7_plot.py` |
 
 The ternary generator also writes `results/source_data/ternary_photokpfm/photoKPFM_acquisitions_all_19.csv`, `Figure3_and_FigureS2_GP_grid_source_data.csv`, `Figure3_representative_histograms_source_data.csv`, `FigureS1_repeat_location_variability_source_data.csv`, `ternary_GP_model_and_figure_provenance.json`, and `ternary_photokpfm_output_manifest.csv`.
 

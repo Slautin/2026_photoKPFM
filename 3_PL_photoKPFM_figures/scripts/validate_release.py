@@ -99,6 +99,7 @@ REQUIRED_MANUSCRIPT_IDS = {
     "figures4",
     "figures5",
     "figures6",
+    "figures7",
     "tables1",
     "tables2",
     "tables3",
@@ -108,6 +109,14 @@ ALLOWED_ASSET_STATUSES = {
     "reproducible", "author-supplied-with-explicit-scope", "historical-gain100"
 }
 GAIN60_GENERATOR = "gain60/reproduce.py"
+GAIN60_S7_DIRECTORY = "gain60/figure_s7"
+GAIN60_S7_STEM = f"{GAIN60_S7_DIRECTORY}/FigureS7_gain60"
+GAIN60_S7_GENERATOR = f"{GAIN60_S7_DIRECTORY}/FigureS7_plot.py"
+GAIN60_S7_SOURCES = (
+    "gain60/data/top_spectra_raw.npz",
+    "gain60/data/well_map.csv",
+    f"{GAIN60_S7_DIRECTORY}/FigureS7_source_spectra.csv",
+)
 GAIN60_ASSETS = {
     'figure4a': (
         'gain60/figures/Figure4a_gain60',
@@ -184,6 +193,7 @@ RELEASE_FIGURES = {
 RELEASE_FIGURES.update({
     stem: ((GAIN60_GENERATOR,), sources) for stem, sources in GAIN60_ASSETS.values()
 })
+RELEASE_FIGURES[GAIN60_S7_STEM] = ((GAIN60_S7_GENERATOR,), GAIN60_S7_SOURCES)
 
 
 def parse_args() -> argparse.Namespace:
@@ -223,6 +233,14 @@ def allowed_comment(line_number: int, comment: str) -> bool:
 
 
 def role_for(relative_path: str) -> str:
+    if relative_path.startswith(f"{GAIN60_S7_DIRECTORY}/"):
+        suffix = Path(relative_path).suffix.lower()
+        if suffix in {".png", ".svg", ".pdf"}:
+            return "figure"
+        if suffix == ".csv":
+            return "figure_source_data"
+        if suffix == ".txt":
+            return "validation_data" if relative_path.endswith("_validation.txt") else "documentation"
     if relative_path == "gain60/data/top_spectra_raw.npz":
         return "raw_data"
     if relative_path.startswith("gain60/data/"):
@@ -551,6 +569,104 @@ def validate_gain60(root: Path) -> dict[str, object]:
     }
 
 
+def validate_gain60_figure_s7(root: Path) -> dict[str, object]:
+    import numpy as np
+    from PIL import Image
+
+    directory = root / GAIN60_S7_DIRECTORY
+    expected_files = {
+        "FigureS7_gain60.svg", "FigureS7_gain60.pdf", "FigureS7_gain60.png",
+        "FigureS7_source_spectra.csv", "FigureS7_plot.py",
+        "FigureS7_caption.txt", "FigureS7_validation.txt",
+    }
+    if not directory.is_dir():
+        raise FileNotFoundError(f"Missing Figure S7 directory: {GAIN60_S7_DIRECTORY}")
+    actual_files = {path.name for path in directory.iterdir() if path.is_file()}
+    if actual_files != expected_files:
+        raise ValueError(
+            f"Figure S7 inventory differs: missing={sorted(expected_files - actual_files)}, "
+            f"extra={sorted(actual_files - expected_files)}"
+        )
+    if any(not (directory / name).stat().st_size for name in expected_files):
+        raise ValueError("Figure S7 contains an empty required file.")
+    columns = [
+        "well_id", "nominal_FA_pct", "nominal_BDA_pct", "nominal_PEA_pct",
+        "acquisition_number", "read_block_number", "gain", "wavelength_nm",
+        "raw_intensity_counts", "in_display_band", "display_normalized_PL",
+    ]
+    frame = pd.read_csv(directory / "FigureS7_source_spectra.csv", keep_default_na=False)
+    selected_wells = ("A1", "F2", "G6", "D3", "C11")
+    if frame.columns.tolist() != columns or len(frame) != 5 * 416:
+        raise ValueError("Figure S7 must contain the declared 11 columns and 2080 spectral rows.")
+    if set(frame["well_id"]) != set(selected_wells):
+        raise ValueError("Figure S7 well selection differs from A1/F2/G6/D3/C11.")
+    for name, value in (("acquisition_number", 22), ("read_block_number", 64), ("gain", 60)):
+        if not pd.to_numeric(frame[name], errors="raise").eq(value).all():
+            raise ValueError(f"Figure S7 has unexpected {name} values.")
+    mask_tokens = frame["in_display_band"].astype(str).str.casefold()
+    if not mask_tokens.isin({"true", "false"}).all():
+        raise ValueError("Figure S7 display-band flags must be True or False.")
+    frame["in_display_band"] = mask_tokens.eq("true")
+    for name in ("wavelength_nm", "raw_intensity_counts", "nominal_FA_pct", "nominal_BDA_pct", "nominal_PEA_pct"):
+        frame[name] = pd.to_numeric(frame[name], errors="raise")
+        if not np.isfinite(frame[name].to_numpy(dtype=float)).all():
+            raise ValueError(f"Figure S7 contains nonfinite {name} values.")
+    if frame.duplicated(["well_id", "wavelength_nm"]).any():
+        raise ValueError("Figure S7 contains duplicate well/wavelength rows.")
+    mapping = pd.read_csv(root / "gain60/data/well_map.csv").set_index("well_id")
+    with np.load(root / "gain60/data/top_spectra_raw.npz", allow_pickle=False) as source:
+        wavelengths = source["wavelengths_nm"].copy()
+        source_wells = source["wells"].astype(str).tolist()
+        acquisitions = source["acquisition_numbers"].tolist()
+        acquisition_index = acquisitions.index(22)
+        if int(source["raw_read_numbers"][acquisition_index]) != 64:
+            raise ValueError("Figure S7 acquisition 22 does not resolve to source read 64.")
+        spectra = source["numeric_values"][acquisition_index].copy()
+    if not np.array_equal(wavelengths, np.arange(455.0, 871.0)):
+        raise ValueError("Figure S7 source must preserve all 416 observed 455–870 nm channels.")
+    maxima = {}
+    for well in selected_wells:
+        rows = frame.loc[frame["well_id"].eq(well)].sort_values("wavelength_nm")
+        if len(rows) != 416 or not np.array_equal(rows["wavelength_nm"].to_numpy(), wavelengths):
+            raise ValueError(f"Figure S7 wavelength channels differ from source for {well}.")
+        raw = rows["raw_intensity_counts"].to_numpy(dtype=float)
+        if not np.array_equal(raw, spectra[source_wells.index(well)]):
+            raise ValueError(f"Figure S7 raw intensities differ from source for {well}.")
+        for name in ("nominal_FA_pct", "nominal_BDA_pct", "nominal_PEA_pct"):
+            if not rows[name].eq(float(mapping.loc[well, name])).all():
+                raise ValueError(f"Figure S7 composition differs from source for {well}: {name}")
+        display = (wavelengths >= 455.0) & (wavelengths <= 850.0)
+        if not np.array_equal(rows["in_display_band"].to_numpy(), display):
+            raise ValueError(f"Figure S7 display-band flags differ for {well}.")
+        if not rows.loc[~display, "display_normalized_PL"].astype(str).str.strip().eq("").all():
+            raise ValueError(f"Figure S7 normalized values must be blank outside 455–850 nm for {well}.")
+        maximum = float(np.max(raw[display]))
+        if maximum <= 0:
+            raise ValueError(f"Figure S7 has no positive display-band maximum for {well}.")
+        normalized = pd.to_numeric(rows.loc[display, "display_normalized_PL"], errors="raise").to_numpy(dtype=float)
+        if not np.allclose(normalized, raw[display] / maximum, rtol=1e-12, atol=1e-12):
+            raise ValueError(f"Figure S7 display normalization differs from source for {well}.")
+        maxima[well] = maximum
+    with Image.open(directory / "FigureS7_gain60.png") as image:
+        dpi = image.info.get("dpi", ())
+        if len(dpi) != 2 or any(abs(float(value) - 600.0) > 0.1 for value in dpi):
+            raise ValueError("Figure S7 PNG is not 600 dpi.")
+    svg_root = ET.parse(directory / "FigureS7_gain60.svg").getroot()
+    tags = {element.tag.rsplit("}", 1)[-1] for element in svg_root.iter()}
+    if "image" in tags or "text" not in tags:
+        raise ValueError("Figure S7 SVG must contain editable labels without embedded raster images.")
+    if not (directory / "FigureS7_gain60.pdf").read_bytes().startswith(b"%PDF-"):
+        raise ValueError("Figure S7 PDF has an invalid file header.")
+    return {
+        "dataset_scope": "active_gain60", "files": len(expected_files),
+        "selected_wells": list(selected_wells), "source_rows": len(frame),
+        "observed_channels_per_well": 416, "display_channels_per_well": 396,
+        "comparison_acquisition": 22, "comparison_raw_read": 64, "gain": 60,
+        "raw_values_match_source": True, "outside_display_normalization_blank": True,
+        "display_band_maxima_counts": maxima, "png_dpi": 600,
+    }
+
+
 def validate_graph(root: Path) -> dict[str, object]:
     literature = root / "data" / "literature"
     nodes = pd.read_csv(literature / "evidence_graph_nodes.csv")
@@ -808,6 +924,11 @@ def expected_asset_index() -> dict[str, dict[str, object]]:
             "generators": (GAIN60_GENERATOR,),
             "sources": sources,
         }
+    assets["figures7"] = {
+        "asset_type": "figure", "status": "reproducible",
+        "outputs": tuple(sorted(release_figure_files({GAIN60_S7_STEM}))),
+        "generators": (GAIN60_S7_GENERATOR,), "sources": GAIN60_S7_SOURCES,
+    }
     return assets
 
 
@@ -980,6 +1101,7 @@ def validate_release_assets(root: Path) -> dict[str, object]:
         provenance = provenance_path.read_text(encoding="utf-8")
         provenance_gaps = []
         gain60_stems = {stem for stem, _sources in GAIN60_ASSETS.values()}
+        gain60_stems.add(GAIN60_S7_STEM)
         for stem, (generators, sources) in RELEASE_FIGURES.items():
             required_tokens = [
                 Path(stem).name,
@@ -1365,6 +1487,7 @@ def main() -> None:
     run_check(report, failures, "raw_data", lambda: validate_raw_data(root))
     run_check(report, failures, "processed_data", lambda: validate_processed_data(root))
     run_check(report, failures, "gain60", lambda: validate_gain60(root))
+    run_check(report, failures, "figure_s7", lambda: validate_gain60_figure_s7(root))
     run_check(report, failures, "graph", lambda: validate_graph(root))
     run_check(report, failures, "ternary_source_data", lambda: validate_ternary_source_data(root))
     run_check(report, failures, "assets", lambda: validate_release_assets(root))

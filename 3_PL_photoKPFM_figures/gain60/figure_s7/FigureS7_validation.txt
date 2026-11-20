@@ -1,0 +1,45 @@
+Figure S7 source and export verification
+
+The BioTek Cytation 5 metadata identifies acquisition 22 as Read 64, top-read
+fluorescence at detector gain 60 with 405 nm excitation. The export contains
+416 measured emission channels per well at 1 nm intervals from 455 to 870 nm.
+The plot and its peak maxima use the 396 channels from 455 to 850 nm inclusive.
+
+Well   Nominal FA/BDA/PEA (%)   Measured peak (nm)   Raw maximum (counts)
+A1             0/0/100                529                   71,601
+F2             24/8/68                525                    9,742
+G6             8/64/28                673                    1,554
+D3             32/8/60                770                    1,741
+C11            32/64/4                788                    1,012
+
+All five requested wells passed. Each maximum is unique, interior to the
+display band, and supported by neighboring channels in a recognizable
+measured emission band. The full export includes isolated high values at
+867 nm for D3 (3,170 counts) and 869 nm for C11 (1,070 counts). These are
+outside the predefined display and analysis range and are retained in the
+source CSV. They were excluded from the plotted traces and peak search.
+
+The measured counts and wavelengths match the packaged instrument workbook
+and public top_spectra_raw.npz for all 2,080 selected channels. Settings agree
+with read_metadata_index.csv and all displayed maxima and peak wavelengths
+agree with peak_maxima_by_well_acquisition.csv and
+final_acquisition_and_retention_by_well.csv. The five nominal recipes agree
+with reference/composition_map.csv and the public well_map.csv. Only nominal
+recipe fields were used from the historical composition map.
+
+FigureS7_source_spectra.csv preserves all 416 raw channels per well. The
+display_normalized_PL column is the measured count divided by that well's
+maximum within 455-850 nm. The column is blank for 851-870 nm. Normalization
+affects only the display. There was no independent detector wavelength-response
+correction, smoothing, interpolation, baseline correction, or peak fitting.
+
+PDF and PNG were visually inspected. The PDF has embedded Arial and vector
+graphics, the SVG preserves editable text and vector paths, and the PNG is
+4,260 x 2,220 pixels at 600 dpi. The standalone plot has axes and an external
+legend with raw maxima. The figure designation appears in the caption.
+
+Input archive: Photovoltage_Gain60_Individual_Panels_2026-11-19.zip
+SHA-256: a10f14a21ef68cecb9d0405b7316771840a1a2f06a826da997419db875f45229
+Spectra source: source_data/selected_final_acquisition_spectra.csv
+Instrument export: source_data/raw/gain60_remake.xlsx
+SHA-256: e09bbee584cd09659579f7ceeacfb26b5c960d80678ba7c2263142f67a15bdf6

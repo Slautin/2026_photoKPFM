@@ -164,6 +164,33 @@
       }
     ]
   },
+  "figure_s7": {
+    "dataset_scope": "active_gain60",
+    "files": 7,
+    "selected_wells": [
+      "A1",
+      "F2",
+      "G6",
+      "D3",
+      "C11"
+    ],
+    "source_rows": 2080,
+    "observed_channels_per_well": 416,
+    "display_channels_per_well": 396,
+    "comparison_acquisition": 22,
+    "comparison_raw_read": 64,
+    "gain": 60,
+    "raw_values_match_source": true,
+    "outside_display_normalization_blank": true,
+    "display_band_maxima_counts": {
+      "A1": 71601.0,
+      "F2": 9742.0,
+      "G6": 1554.0,
+      "D3": 1741.0,
+      "C11": 1012.0
+    },
+    "png_dpi": 600
+  },
   "graph": {
     "nodes": 97,
     "edges": 120,
@@ -197,8 +224,8 @@
     "manifested_outputs": 26
   },
   "assets": {
-    "figure_stems": 15,
-    "figure_files": 45,
+    "figure_stems": 16,
+    "figure_files": 48,
     "author_supplied_figures": 2,
     "ternary_source_files": 6,
     "table_files": 2,
@@ -209,17 +236,17 @@
       "S4": 36
     },
     "manuscript_index": {
-      "indexed_assets": 17,
-      "required_manuscript_assets": 17,
+      "indexed_assets": 18,
+      "required_manuscript_assets": 18,
       "status_counts": {
         "author-supplied-with-explicit-scope": 2,
         "historical-gain100": 1,
-        "reproducible": 14
+        "reproducible": 15
       }
     }
   },
   "python": {
-    "python_files": 13,
+    "python_files": 14,
     "syntax_valid": true,
     "remaining_comments": [
       {
@@ -243,6 +270,7 @@
   },
   "single_panel_sources": {
     "active_plotting_entrypoints": [
+      "gain60/figure_s7/FigureS7_plot.py",
       "scripts/analysis/analyze_pl_photokpfm_associations.py",
       "scripts/experimental/analyze_pl_metrics.py",
       "scripts/experimental/validate_spectral_processing.py",
@@ -259,11 +287,11 @@
     "nonessential_code_comments": 0
   },
   "inventory": {
-    "files": 125,
-    "bytes": 31424793,
+    "files": 132,
+    "bytes": 32259686,
     "exact_duplicate_groups": 0,
     "manifest": {
-      "manifest_rows": 125,
+      "manifest_rows": 132,
       "missing": 0,
       "extra": 0,
       "changed": 0

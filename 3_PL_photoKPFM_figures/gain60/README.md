@@ -34,3 +34,17 @@ Figures 5a and 5b retain `abs(mean(signed Gaussian shift))` at the original prec
 The PL and photoKPFM libraries were prepared independently and matched by nominal composition. The 19 scan pairs include repeated locations within droplets and are not 19 independent devices. The new PL run does not recover historical overflow values, establish same-specimen or synchronized measurements, or supply new spectral-component fits or structural phase fractions. No new 36-test family or multiple-testing q values are reported; historical gain-100 q values are not gain-60 results.
 
 `validation.json` records the source, array, Gaussian and rendering checks. The six committed PNGs reproduce the approved individual exports exactly in the recorded environment. Plot geometry and numeric inputs are reproducible; font availability and library versions can affect rendering on another platform. All files needed for this route are within this directory and its shared parent data/code tree.
+
+## Figure S7 representative spectra
+
+[`figure_s7/`](figure_s7/) contains the standalone plot in SVG, PDF and
+600-dpi PNG, the source CSV, caption, and verification notes. The CSV retains
+all 416 measured channels for five wells at acquisition 22 (Read 64). Each
+trace is divided by its own measured maximum over 455–850 nm for display.
+The legend reports the raw maxima over the same interval.
+
+Run from `3_PL_photoKPFM_figures` to regenerate the three Figure S7 exports:
+
+```text
+python gain60/figure_s7/FigureS7_plot.py --output-dir ../reproduced_figure_s7
+```
