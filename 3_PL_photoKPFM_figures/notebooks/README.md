@@ -1,4 +1,6 @@
-# PL phase-fitting notebook
+# Historical gain-100 PL fitting notebook
+
+The archived notebook documents the gain-100 spectral analysis. Several fit helpers are unavailable in this source. See [gain-60 reproduction](../gain60/) for the current peak-intensity analysis.
 
 `pl_phase_fitting_colab.ipynb` is the output-free Google Colab workflow used for endpoint-calibrated, residual-aware PL emissive-component fitting.
 

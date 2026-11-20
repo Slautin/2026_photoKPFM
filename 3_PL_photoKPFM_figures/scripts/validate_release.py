@@ -9,8 +9,10 @@ import json
 import math
 import os
 import re
+import runpy
 import tempfile
 import tokenize
+import xml.etree.ElementTree as ET
 from collections import defaultdict
 from pathlib import Path
 
@@ -24,9 +26,9 @@ DUPLICATE_AUDIT_NAME = "DUPLICATE_AUDIT.csv"
 REPORT_NAME = "VALIDATION_REPORT.json"
 EXCLUDED_DIRECTORIES = {".git", ".venv", "__pycache__", "reproduced_results"}
 TRACKING_FILES = {MANIFEST_NAME, DUPLICATE_AUDIT_NAME, REPORT_NAME}
-CANONICAL_TABLE_PATH = "results/tables/supplementary_tables_current_manuscript_S1-S4.docx"
+CANONICAL_TABLE_PATH = "results/tables/supplementary_tables_S1-S4.docx"
 CANONICAL_TABLE_PROVENANCE_PATH = (
-    "results/tables/supplementary_tables_current_manuscript_S1-S4.provenance.json"
+    "results/tables/supplementary_tables_S1-S4.provenance.json"
 )
 CANONICAL_TABLE_GENERATOR = "scripts/publication/generate_supplementary_tables.py"
 LEGACY_TABLE_PATH = "results/tables/supplementary_tables_scientifically_corrected.docx"
@@ -45,6 +47,11 @@ AUTHOR_SUPPLIED_ASSETS = {
     "figure2": "results/figures/author_supplied/Figure2_binary_photokpfm_author_supplied.jpeg",
 }
 STALE_FIGURE_STEMS = (
+    "results/figures/main/Figure4A_PL_189min_ternary",
+    "results/figures/main/Figure4B_PL_retention_ternary",
+    "results/figures/main/Figure5A_matched_screening_space",
+    "results/figures/main/Figure5B_candidate_rank_comparison",
+    "results/figures/supplementary/FigureS4_representative_PL_time_traces",
     "results/figures/main/Figure4C_representative_PL_time_traces",
     "results/figures/main/figure_photokpfm_knowledge_graph_corrected",
     "results/figures/supplementary/FigureS_all_13_PL_time_traces",
@@ -52,7 +59,12 @@ STALE_FIGURE_STEMS = (
     "results/figures/supplementary/FigureS_plate_composition_map",
     "results/figures/supplementary/figure_literature_measurement_pairings_corrected",
 )
-STALE_RELEASE_PATHS = (LEGACY_TABLE_PATH, "_publication_refresh")
+STALE_RELEASE_PATHS = (
+    LEGACY_TABLE_PATH,
+    "results/tables/supplementary_tables_current_manuscript_S1-S4.docx",
+    "results/tables/supplementary_tables_current_manuscript_S1-S4.provenance.json",
+    "_publication_refresh",
+)
 EXPECTED_WELLS = [f"{row}{column}" for row in "ABCDEFGH" for column in range(1, 13)]
 EXPECTED_GRAPH_NODE_TYPES = {
     "EvidenceRecord": 15,
@@ -85,97 +97,93 @@ REQUIRED_MANUSCRIPT_IDS = {
     "figures2",
     "figures3",
     "figures4",
+    "figures5",
     "figures6",
     "tables1",
     "tables2",
     "tables3",
     "tables4",
 }
-ALLOWED_ASSET_STATUSES = {"reproducible", "author-supplied-with-explicit-scope"}
-RELEASE_FIGURES = {
-    "results/figures/main/Figure3_GP_mean_map": (
-        (TERNARY_GENERATOR,),
-        ("data/raw/photokpfm_measurements.h5",),
-    ),
-    "results/figures/main/Figure3_representative_SP_histogram_1": (
-        (TERNARY_GENERATOR,),
-        ("data/raw/photokpfm_measurements.h5",),
-    ),
-    "results/figures/main/Figure3_representative_SP_histogram_2": (
-        (TERNARY_GENERATOR,),
-        ("data/raw/photokpfm_measurements.h5",),
-    ),
-    "results/figures/main/Figure3_representative_SP_histogram_3": (
-        (TERNARY_GENERATOR,),
-        ("data/raw/photokpfm_measurements.h5",),
-    ),
-    "results/figures/main/Figure3_representative_SP_histogram_4": (
-        (TERNARY_GENERATOR,),
-        ("data/raw/photokpfm_measurements.h5",),
-    ),
-    "results/figures/main/Figure4A_PL_189min_ternary": (
-        ("scripts/publication/generate_publication_figures.py",),
+ALLOWED_ASSET_STATUSES = {
+    "reproducible", "author-supplied-with-explicit-scope", "historical-gain100"
+}
+GAIN60_GENERATOR = "gain60/reproduce.py"
+GAIN60_ASSETS = {
+    'figure4a': (
+        'gain60/figures/Figure4a_gain60',
         (
-            "data/processed/pl_retention_metrics.csv",
-            "data/processed/matched_pl_photokpfm_metrics.csv",
-            "data/processed/representative_pl_trace_selection.csv",
+            'gain60/data/top_spectra_raw.npz',
+            'gain60/data/well_map.csv',
+            'gain60/data/final_acquisition_and_retention_by_well.csv',
+            'gain60/data/matched13_panel_source.csv',
         ),
     ),
-    "results/figures/main/Figure4B_PL_retention_ternary": (
+    'figure4b': (
+        'gain60/figures/Figure4b_gain60',
         (
-            "scripts/publication/generate_publication_figures.py",
-        ),
-        (
-            "data/processed/pl_retention_metrics.csv",
-            "data/processed/matched_pl_photokpfm_metrics.csv",
-            "data/processed/representative_pl_trace_selection.csv",
-        ),
-    ),
-    "results/figures/main/Figure5A_matched_screening_space": (
-        ("scripts/publication/generate_publication_figures.py",),
-        (
-            "data/processed/matched_pl_photokpfm_metrics.csv",
-            "data/processed/representative_pl_trace_selection.csv",
+            'gain60/data/top_spectra_raw.npz',
+            'gain60/data/well_map.csv',
+            'gain60/data/final_acquisition_and_retention_by_well.csv',
+            'gain60/data/matched13_panel_source.csv',
         ),
     ),
-    "results/figures/main/Figure5B_candidate_rank_comparison": (
-        ("scripts/publication/generate_publication_figures.py",),
+    'figure5a': (
+        'gain60/figures/Figure5a_gain60',
         (
-            "data/processed/matched_pl_photokpfm_metrics.csv",
-            "data/processed/candidate_rank_comparison.csv",
+            'gain60/data/top_spectra_raw.npz',
+            'gain60/data/well_map.csv',
+            'data/raw/photokpfm_measurements.h5',
+            'data/processed/initial_phase_kpfm_table.csv',
+            'data/processed/matched_pl_photokpfm_metrics.csv',
+            'gain60/data/matched13_panel_source.csv',
         ),
     ),
-    "results/figures/supplementary/FigureS1_repeat_location_variability": (
-        (TERNARY_GENERATOR,),
-        ("data/raw/photokpfm_measurements.h5",),
-    ),
-    "results/figures/supplementary/FigureS2_GP_uncertainty_map": (
-        (TERNARY_GENERATOR,),
-        ("data/raw/photokpfm_measurements.h5",),
-    ),
-    "results/figures/supplementary/FigureS3_plate_composition_map": (
-        ("scripts/publication/generate_publication_figures.py",),
-        ("data/processed/plate_composition_map.csv",),
-    ),
-    "results/figures/supplementary/FigureS4_representative_PL_time_traces": (
-        ("scripts/publication/generate_publication_figures.py",),
+    'figure5b': (
+        'gain60/figures/Figure5b_gain60',
         (
-            "data/processed/representative_pl_traces.csv",
-            "data/processed/representative_pl_trace_selection.csv",
+            'gain60/data/top_spectra_raw.npz',
+            'gain60/data/well_map.csv',
+            'data/raw/photokpfm_measurements.h5',
+            'data/processed/initial_phase_kpfm_table.csv',
+            'data/processed/matched_pl_photokpfm_metrics.csv',
+            'gain60/data/matched13_panel_source.csv',
         ),
     ),
-    "results/figures/supplementary/FigureS6_evidence_graph": (
+    'figures4': (
+        'gain60/figures/FigureS4_gain60',
         (
-            "scripts/literature/build_evidence_graph.py",
-            "scripts/literature/plot_evidence_graph.py",
+            'gain60/data/top_spectra_raw.npz',
+            'gain60/data/well_map.csv',
+            'gain60/data/normalized_peak_series.csv',
         ),
+    ),
+    'figures5': (
+        'gain60/figures/FigureS5_gain60',
         (
-            "data/literature/evidence_graph_nodes.csv",
-            "data/literature/evidence_graph_edges.csv",
-            "data/literature/table_s4_retained_relationships.csv",
+            'gain60/data/top_spectra_raw.npz',
+            'gain60/data/well_map.csv',
+            'data/raw/photokpfm_measurements.h5',
+            'data/processed/initial_phase_kpfm_table.csv',
+            'data/processed/matched_pl_photokpfm_metrics.csv',
+            'gain60/data/matched13_panel_source.csv',
+            'gain60/data/statistics.json',
         ),
     ),
 }
+RELEASE_FIGURES = {
+    'results/figures/main/Figure3_GP_mean_map': ((TERNARY_GENERATOR,), ('data/raw/photokpfm_measurements.h5',)),
+    'results/figures/main/Figure3_representative_SP_histogram_1': ((TERNARY_GENERATOR,), ('data/raw/photokpfm_measurements.h5',)),
+    'results/figures/main/Figure3_representative_SP_histogram_2': ((TERNARY_GENERATOR,), ('data/raw/photokpfm_measurements.h5',)),
+    'results/figures/main/Figure3_representative_SP_histogram_3': ((TERNARY_GENERATOR,), ('data/raw/photokpfm_measurements.h5',)),
+    'results/figures/main/Figure3_representative_SP_histogram_4': ((TERNARY_GENERATOR,), ('data/raw/photokpfm_measurements.h5',)),
+    'results/figures/supplementary/FigureS1_repeat_location_variability': ((TERNARY_GENERATOR,), ('data/raw/photokpfm_measurements.h5',)),
+    'results/figures/supplementary/FigureS2_GP_uncertainty_map': ((TERNARY_GENERATOR,), ('data/raw/photokpfm_measurements.h5',)),
+    'results/figures/supplementary/FigureS3_plate_composition_map': (('scripts/publication/generate_publication_figures.py',), ('gain60/data/well_map.csv',)),
+    'results/figures/supplementary/FigureS6_evidence_graph': (('scripts/literature/build_evidence_graph.py', 'scripts/literature/plot_evidence_graph.py'), ('data/literature/evidence_graph_nodes.csv', 'data/literature/evidence_graph_edges.csv', 'data/literature/table_s4_retained_relationships.csv')),
+}
+RELEASE_FIGURES.update({
+    stem: ((GAIN60_GENERATOR,), sources) for stem, sources in GAIN60_ASSETS.values()
+})
 
 
 def parse_args() -> argparse.Namespace:
@@ -215,6 +223,14 @@ def allowed_comment(line_number: int, comment: str) -> bool:
 
 
 def role_for(relative_path: str) -> str:
+    if relative_path == "gain60/data/top_spectra_raw.npz":
+        return "raw_data"
+    if relative_path.startswith("gain60/data/"):
+        return "processed_data"
+    if relative_path.startswith("gain60/figures/"):
+        return "figure"
+    if relative_path.startswith("gain60/") and relative_path.endswith(".py"):
+        return "analysis_code"
     if relative_path.startswith("data/raw/"):
         return "raw_data"
     if relative_path.startswith("data/processed/"):
@@ -247,6 +263,7 @@ def validate_required_files(root: Path, refresh_manifest: bool) -> dict[str, obj
         root / "docs" / "MANUSCRIPT_ASSET_INDEX.csv",
         root / "notebooks" / "README.md",
         root / "scripts" / "reproduce_all.py",
+        root / GAIN60_GENERATOR,
         root / "scripts" / "publication" / "generate_publication_figures.py",
         root / TERNARY_GENERATOR,
         root / "scripts" / "literature" / "build_evidence_graph.py",
@@ -374,6 +391,7 @@ def validate_raw_data(root: Path) -> dict[str, object]:
     if len(idx) != 19 or len(set(idx)) != 13 or not all(0 <= value < 96 for value in idx):
         raise ValueError("Expected 19 valid photoKPFM acquisition pairs spanning 13 unique wells.")
     return {
+        "pl_dataset_scope": "historical_gain100",
         "pl_wells": 96,
         "pl_top_timepoints": len(valid_top_reads),
         "pl_parsed_rows": 96 * len(valid_top_reads),
@@ -460,11 +478,76 @@ def validate_processed_data(root: Path) -> dict[str, object]:
     if set(pd.to_numeric(ranks["photoKPFM_rank"], errors="raise").astype(int)) != expected_ranks:
         raise ValueError("Candidate photoKPFM ranks are not a complete 1-13 permutation.")
     return {
+        "pl_dataset_scope": "historical_gain100",
         "datasets": inventory,
         "pl_wells": 96,
         "unique_nominal_compositions": 91,
         "matched_wells": 13,
         "representative_wells": sorted(selected_wells),
+    }
+
+
+def validate_gain60(root: Path) -> dict[str, object]:
+    namespace = runpy.run_path(str(root / GAIN60_GENERATOR))
+    source_checks = namespace["validate_sources"]()
+    if source_checks.get("status") != "passed":
+        raise ValueError(f"Gain-60 source validation did not pass: {source_checks}")
+    json.dumps(source_checks, allow_nan=False)
+    from PIL import Image
+
+    expected_files = {
+        Path(f"{stem}{suffix}").name
+        for stem, _sources in GAIN60_ASSETS.values()
+        for suffix in (".png", ".svg", ".pdf")
+    }
+    actual_files = {
+        path.name for path in (root / "gain60" / "figures").iterdir()
+        if path.is_file() and path.suffix.lower() in {".png", ".svg", ".pdf"}
+    }
+    if actual_files != expected_files:
+        raise ValueError(
+            f"Gain-60 figure inventory differs: missing={sorted(expected_files - actual_files)}, "
+            f"extra={sorted(actual_files - expected_files)}"
+        )
+    forbidden_annotations = (
+        "comparison timepoint", "Normalized PL peak-intensity trajectories",
+        "PL and photoKPFM screening", "Candidate reprioritization",
+        "PL peak intensity versus photoKPFM response", "Pearson", "bootstrap CI",
+    )
+    figures = []
+    for stem, _sources in GAIN60_ASSETS.values():
+        png = root / f"{stem}.png"
+        svg = root / f"{stem}.svg"
+        pdf = root / f"{stem}.pdf"
+        for path in (png, svg, pdf):
+            if not path.is_file() or not path.stat().st_size:
+                raise ValueError(f"Missing or empty gain-60 figure: {path.relative_to(root)}")
+        with Image.open(png) as image:
+            dpi = image.info.get("dpi", ())
+            if len(dpi) != 2 or any(abs(float(value) - 600.0) > 0.1 for value in dpi):
+                raise ValueError(f"Gain-60 PNG is not 600 dpi: {png.name}, {dpi}")
+        svg_root = ET.parse(svg).getroot()
+        if any(element.tag.rsplit("}", 1)[-1] == "image" for element in svg_root.iter()):
+            raise ValueError(f"Gain-60 SVG contains an embedded raster image: {svg.name}")
+        text_nodes = [
+            "".join(element.itertext()).strip()
+            for element in svg_root.iter()
+            if element.tag.rsplit("}", 1)[-1] == "text"
+        ]
+        if not text_nodes:
+            raise ValueError(f"Gain-60 SVG lacks editable scientific labels: {svg.name}")
+        visible = " ".join(text_nodes)
+        if any(term.casefold() in visible.casefold() for term in forbidden_annotations):
+            raise ValueError(f"Gain-60 plot contains a title or statistics annotation: {svg.name}")
+        if any(re.fullmatch(r"\(?[aAbB]\)?[.)]?", text) for text in text_nodes):
+            raise ValueError(f"Gain-60 plot contains a panel letter: {svg.name}")
+        figures.append({"stem": stem, "formats": 3, "png_dpi": 600, "svg_embedded_images": 0})
+    return {
+        "dataset_scope": "active_gain60",
+        "source_checks": source_checks,
+        "individual_figures": len(figures),
+        "figure_files": len(figures) * 3,
+        "figures": figures,
     }
 
 
@@ -704,144 +787,28 @@ def expected_asset_index() -> dict[str, dict[str, object]]:
         "results/figures/main/Figure3_representative_SP_histogram_3",
         "results/figures/main/Figure3_representative_SP_histogram_4",
     }
-    return {
-        "figure1": {
-            "asset_type": "figure",
-            "status": "author-supplied-with-explicit-scope",
-            "outputs": (AUTHOR_SUPPLIED_ASSETS["figure1"],),
-            "generators": (),
-            "sources": (),
-        },
-        "figure2": {
-            "asset_type": "figure",
-            "status": "author-supplied-with-explicit-scope",
-            "outputs": (AUTHOR_SUPPLIED_ASSETS["figure2"],),
-            "generators": (),
-            "sources": (),
-        },
-        "figure3": {
-            "asset_type": "figure",
-            "status": "reproducible",
-            "outputs": tuple(sorted(release_figure_files(figure3_stems))),
-            "generators": (TERNARY_GENERATOR,),
-            "sources": ("data/raw/photokpfm_measurements.h5",),
-        },
-        "figure4a": {
-            "asset_type": "figure",
-            "status": "reproducible",
-            "outputs": tuple(sorted(release_figure_files({"results/figures/main/Figure4A_PL_189min_ternary"}))),
-            "generators": (publication_generator,),
-            "sources": (
-                "data/processed/pl_retention_metrics.csv",
-                "data/processed/matched_pl_photokpfm_metrics.csv",
-                "data/processed/representative_pl_trace_selection.csv",
-            ),
-        },
-        "figure4b": {
-            "asset_type": "figure",
-            "status": "reproducible",
-            "outputs": tuple(sorted(release_figure_files({"results/figures/main/Figure4B_PL_retention_ternary"}))),
-            "generators": (publication_generator,),
-            "sources": (
-                "data/processed/pl_retention_metrics.csv",
-                "data/processed/matched_pl_photokpfm_metrics.csv",
-                "data/processed/representative_pl_trace_selection.csv",
-            ),
-        },
-        "figure5a": {
-            "asset_type": "figure",
-            "status": "reproducible",
-            "outputs": tuple(sorted(release_figure_files({"results/figures/main/Figure5A_matched_screening_space"}))),
-            "generators": (publication_generator,),
-            "sources": (
-                "data/processed/matched_pl_photokpfm_metrics.csv",
-                "data/processed/representative_pl_trace_selection.csv",
-            ),
-        },
-        "figure5b": {
-            "asset_type": "figure",
-            "status": "reproducible",
-            "outputs": tuple(sorted(release_figure_files({"results/figures/main/Figure5B_candidate_rank_comparison"}))),
-            "generators": (publication_generator,),
-            "sources": (
-                "data/processed/matched_pl_photokpfm_metrics.csv",
-                "data/processed/candidate_rank_comparison.csv",
-            ),
-        },
-        "figures1": {
-            "asset_type": "figure",
-            "status": "reproducible",
-            "outputs": tuple(sorted(release_figure_files({"results/figures/supplementary/FigureS1_repeat_location_variability"}))),
-            "generators": (TERNARY_GENERATOR,),
-            "sources": ("data/raw/photokpfm_measurements.h5",),
-        },
-        "figures2": {
-            "asset_type": "figure",
-            "status": "reproducible",
-            "outputs": tuple(sorted(release_figure_files({"results/figures/supplementary/FigureS2_GP_uncertainty_map"}))),
-            "generators": (TERNARY_GENERATOR,),
-            "sources": ("data/raw/photokpfm_measurements.h5",),
-        },
-        "figures3": {
-            "asset_type": "figure",
-            "status": "reproducible",
-            "outputs": tuple(sorted(release_figure_files({"results/figures/supplementary/FigureS3_plate_composition_map"}))),
-            "generators": (publication_generator,),
-            "sources": ("data/processed/plate_composition_map.csv",),
-        },
-        "figures4": {
-            "asset_type": "figure",
-            "status": "reproducible",
-            "outputs": tuple(sorted(release_figure_files({"results/figures/supplementary/FigureS4_representative_PL_time_traces"}))),
-            "generators": (publication_generator,),
-            "sources": (
-                "data/processed/representative_pl_traces.csv",
-                "data/processed/representative_pl_trace_selection.csv",
-            ),
-        },
-        "figures6": {
-            "asset_type": "figure",
-            "status": "reproducible",
-            "outputs": tuple(sorted(release_figure_files({"results/figures/supplementary/FigureS6_evidence_graph"}))),
-            "generators": ("scripts/literature/plot_evidence_graph.py",),
-            "sources": (
-                "data/literature/evidence_graph_nodes.csv",
-                "data/literature/evidence_graph_edges.csv",
-                "data/literature/table_s4_retained_relationships.csv",
-            ),
-        },
-        "tables1": {
-            "asset_type": "table",
-            "status": "reproducible",
-            "outputs": table_output,
-            "generators": table_generator,
-            "sources": (
-                "data/raw/photokpfm_measurements.h5",
-                "data/processed/plate_composition_map.csv",
-            ),
-        },
-        "tables2": {
-            "asset_type": "table",
-            "status": "reproducible",
-            "outputs": table_output,
-            "generators": table_generator,
-            "sources": ("data/literature/table_s3_relationship_summary.csv",),
-        },
-        "tables3": {
-            "asset_type": "table",
-            "status": "reproducible",
-            "outputs": table_output,
-            "generators": table_generator,
-            "sources": ("data/literature/table_s4_retained_relationships.csv",),
-        },
-        "tables4": {
-            "asset_type": "table",
-            "status": "reproducible",
-            "outputs": table_output,
-            "generators": table_generator,
-            "sources": ("data/processed/exploratory_association_statistics.csv",),
-        },
+    assets = {
+        'figure1': {'asset_type': 'figure', 'status': 'author-supplied-with-explicit-scope', 'outputs': (AUTHOR_SUPPLIED_ASSETS['figure1'],), 'generators': (), 'sources': ()},
+        'figure2': {'asset_type': 'figure', 'status': 'author-supplied-with-explicit-scope', 'outputs': (AUTHOR_SUPPLIED_ASSETS['figure2'],), 'generators': (), 'sources': ()},
+        'figure3': {'asset_type': 'figure', 'status': 'reproducible', 'outputs': tuple(sorted(release_figure_files(figure3_stems))), 'generators': (TERNARY_GENERATOR,), 'sources': ('data/raw/photokpfm_measurements.h5',)},
+        'figures1': {'asset_type': 'figure', 'status': 'reproducible', 'outputs': tuple(sorted(release_figure_files({'results/figures/supplementary/FigureS1_repeat_location_variability'}))), 'generators': (TERNARY_GENERATOR,), 'sources': ('data/raw/photokpfm_measurements.h5',)},
+        'figures2': {'asset_type': 'figure', 'status': 'reproducible', 'outputs': tuple(sorted(release_figure_files({'results/figures/supplementary/FigureS2_GP_uncertainty_map'}))), 'generators': (TERNARY_GENERATOR,), 'sources': ('data/raw/photokpfm_measurements.h5',)},
+        'figures3': {'asset_type': 'figure', 'status': 'reproducible', 'outputs': tuple(sorted(release_figure_files({'results/figures/supplementary/FigureS3_plate_composition_map'}))), 'generators': (publication_generator,), 'sources': ('gain60/data/well_map.csv',)},
+        'figures6': {'asset_type': 'figure', 'status': 'reproducible', 'outputs': tuple(sorted(release_figure_files({'results/figures/supplementary/FigureS6_evidence_graph'}))), 'generators': ('scripts/literature/plot_evidence_graph.py',), 'sources': ('data/literature/evidence_graph_nodes.csv', 'data/literature/evidence_graph_edges.csv', 'data/literature/table_s4_retained_relationships.csv')},
+        'tables1': {'asset_type': 'table', 'status': 'reproducible', 'outputs': table_output, 'generators': table_generator, 'sources': ('data/raw/photokpfm_measurements.h5', 'data/processed/plate_composition_map.csv')},
+        'tables2': {'asset_type': 'table', 'status': 'reproducible', 'outputs': table_output, 'generators': table_generator, 'sources': ('data/literature/table_s3_relationship_summary.csv',)},
+        'tables3': {'asset_type': 'table', 'status': 'reproducible', 'outputs': table_output, 'generators': table_generator, 'sources': ('data/literature/table_s4_retained_relationships.csv',)},
+        'tables4': {'asset_type': 'table', 'status': 'historical-gain100', 'outputs': table_output, 'generators': table_generator, 'sources': ('data/processed/exploratory_association_statistics.csv',)},
     }
+    for item_id, (stem, sources) in GAIN60_ASSETS.items():
+        assets[item_id] = {
+            "asset_type": "figure",
+            "status": "reproducible",
+            "outputs": tuple(sorted(release_figure_files({stem}))),
+            "generators": (GAIN60_GENERATOR,),
+            "sources": sources,
+        }
+    return assets
 
 
 def validate_asset_index(root: Path) -> dict[str, object]:
@@ -885,7 +852,7 @@ def validate_asset_index(root: Path) -> dict[str, object]:
                 raise ValueError(f"Missing or empty manuscript asset: {value}")
         source_paths = split_paths(row["source_paths"])
         generators = split_paths(row["generator_script"])
-        if status == "reproducible":
+        if status in {"reproducible", "historical-gain100"}:
             if not generators:
                 raise ValueError(f"Missing generator_script at asset-index row {row_number}.")
             for generator in generators:
@@ -896,6 +863,10 @@ def validate_asset_index(root: Path) -> dict[str, object]:
             for value in source_paths:
                 if not safe_relative(root, value).is_file():
                     raise ValueError(f"Missing indexed source file: {value}")
+            if status == "historical-gain100" and not re.search(
+                r"historical.*gain.?100|gain.?100.*historical", row["scope_note"], re.IGNORECASE
+            ):
+                raise ValueError(f"Historical gain-100 asset lacks dataset scope at row {row_number}.")
         else:
             if generators or source_paths:
                 raise ValueError(f"Author-supplied asset claims a generator or source at row {row_number}.")
@@ -1008,11 +979,12 @@ def validate_release_assets(root: Path) -> dict[str, object]:
     if provenance_path.is_file():
         provenance = provenance_path.read_text(encoding="utf-8")
         provenance_gaps = []
+        gain60_stems = {stem for stem, _sources in GAIN60_ASSETS.values()}
         for stem, (generators, sources) in RELEASE_FIGURES.items():
             required_tokens = [
                 Path(stem).name,
                 *(Path(generator).name for generator in generators),
-                *(Path(source).name for source in sources),
+                *(Path(source).name for source in sources if stem not in gain60_stems),
             ]
             absent = [token for token in required_tokens if token not in provenance]
             if absent:
@@ -1171,7 +1143,8 @@ def notebook_python_source(source: str) -> str:
 def validate_single_panel_sources(root: Path) -> dict[str, object]:
     active = []
     violations = []
-    for path in sorted((root / "scripts").rglob("*.py")):
+    plotting_sources = [*(root / "scripts").rglob("*.py"), *(root / "gain60").rglob("*.py")]
+    for path in sorted(plotting_sources):
         source = path.read_text(encoding="utf-8")
         if "matplotlib" not in source:
             continue
@@ -1253,7 +1226,7 @@ def validate_names(root: Path) -> dict[str, object]:
         if included_path(path, root) and forbidden.search(path.name)
     ]
     if bad:
-        raise ValueError(f"Unclear or reviewer-specific filenames remain: {bad[:10]}")
+        raise ValueError(f"Unclear or personal filenames remain: {bad[:10]}")
     return {"forbidden_names": 0}
 
 
@@ -1381,13 +1354,17 @@ def run_check(report: dict[str, object], failures: list[dict[str, str]], name: s
 def main() -> None:
     args = parse_args()
     root = args.root.resolve()
-    report: dict[str, object] = {"status": "running", "mode": "read_only"}
+    report: dict[str, object] = {
+        "status": "running", "mode": "read_only",
+        "active_PL_dataset": "gain60", "historical_PL_dataset": "gain100",
+    }
     failures: list[dict[str, str]] = []
     run_check(report, failures, "required_files", lambda: validate_required_files(root, args.refresh_manifest))
     run_check(report, failures, "names", lambda: validate_names(root))
     run_check(report, failures, "relationships", lambda: validate_relationships(root))
     run_check(report, failures, "raw_data", lambda: validate_raw_data(root))
     run_check(report, failures, "processed_data", lambda: validate_processed_data(root))
+    run_check(report, failures, "gain60", lambda: validate_gain60(root))
     run_check(report, failures, "graph", lambda: validate_graph(root))
     run_check(report, failures, "ternary_source_data", lambda: validate_ternary_source_data(root))
     run_check(report, failures, "assets", lambda: validate_release_assets(root))

@@ -1,8 +1,15 @@
 # Data provenance
 
-## Raw PL export
+## Gain-60 top-read dataset
 
-`data/raw/pl_plate_reader_export.csv` is the original Cytation 5 plate-reader export for the 96-well PEA/BDA/FA compositional library. It is an instrument report rather than a rectangular analysis table: the file has 43,818 physical rows, as many as 98 fields per row, and 90 labeled read blocks. The validated longitudinal analysis uses the 22 complete top-read emission-spectrum blocks numbered 1, 4, 7, ..., 64. Each selected block contains all 96 wells, yielding 2,112 well-timepoint observations. The plate represents 91 unique nominal composition triplets because five compositions were repeated.
+The current spectra and nominal plate map are in [gain60/](../gain60/).
+The numeric archive contains all measured top-read channels. Acquisition 22
+is the comparison read. See the gain-60 documentation for the instrument
+setting, array layout, and source hashes.
+
+## Historical gain-100 PL export
+
+`data/raw/pl_plate_reader_export.csv` is the historical gain-100 Cytation 5 plate-reader export for the 96-well PEA/BDA/FA compositional library. It is an instrument report rather than a rectangular analysis table: the file has 43,818 physical rows, as many as 98 fields per row, and 90 labeled read blocks. The validated longitudinal analysis uses the 22 complete top-read emission-spectrum blocks numbered 1, 4, 7, ..., 64. Each selected block contains all 96 wells, yielding 2,112 well-timepoint observations. The plate represents 91 unique nominal composition triplets because five compositions were repeated.
 
 The raw export is retained unchanged. `data/processed/pl_retention_metrics.csv`, the matched PL tables, and the trace tables are derived release inputs. The representative-trace and all-matched-trace tables preserve plotted numerical coordinates; their endpoints are checked against the independently calculated PL-retention metrics.
 
@@ -28,8 +35,8 @@ This HDF5 file is not the binary-library dataset underlying rendered Figure 2. T
 
 ## Derived and literature data
 
-`data/processed/initial_phase_kpfm_table.csv` is the checked downstream table from the endpoint-calibrated Colab phase-fitting workflow. The output-free notebook and both bundled raw files are supplied, but the fit remains separate from the local one-command route because it uses Colab upload widgets.
+`data/processed/initial_phase_kpfm_table.csv` is the checked downstream table from the endpoint-calibrated Colab phase-fitting workflow. The archived notebook documents the fitting approach and uses Colab upload widgets. Its source lacks several fit helpers. The gain-60 reproduction uses measured peak intensities and the archived AFM metrics.
 
 The literature data contain 15 retained complementary relationships from seven DOI-linked primary papers after source-level review. Publisher PDFs and article full text are not redistributed. The evidence graph contains 97 nodes and 120 edges; every edge retains `causal_status = complementary_only`.
 
-Working directories, cached language-model responses, noncurrent plots, reviewer markup, and duplicate files are intentionally excluded. File-level SHA-256 values are recorded in `MANIFEST.csv`; generated table and ternary-model provenance records carry their own source hashes.
+Working directories, cached language-model responses, noncurrent plots, and duplicate files are intentionally excluded. File-level SHA-256 values are recorded in `MANIFEST.csv`; generated table and ternary-model provenance records carry their own source hashes.

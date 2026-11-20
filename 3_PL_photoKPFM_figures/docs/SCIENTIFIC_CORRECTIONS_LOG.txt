@@ -6,13 +6,13 @@ Source SHA-256: 04653b7dc686bcdd834f0ef8c48ecd7e7545c79ec66e15c48e200c7fa9a36d0b
 Current machine-readable sources:
 - data/literature/table_s3_relationship_summary.csv (current Table S2)
 - data/literature/table_s4_retained_relationships.csv (current Table S3)
-Current combined document: results/tables/supplementary_tables_current_manuscript_S1-S4.docx
+Supplementary table export: results/tables/supplementary_tables_S1-S4.docx
 
 Scope and verification
 ----------------------
 - Historical Table S3 count corrections are published as current Table S2.
 - Historical Table S4 record corrections are published as current Table S3.
-- Current Table S1 is the ternary photoKPFM acquisition log, and current Table S4 contains exploratory association statistics; neither was part of the historical literature-table correction.
+- Current Table S1 is the ternary photoKPFM acquisition log, and Table S4 contains the historical gain-100 exploratory associations; neither was part of the historical literature-table correction.
 - Each retained relationship was checked against the traceable source excerpts extracted from the original article. Ambiguous rows were also checked against the publisher full text or open-access primary article.
 - Final retained set: 15 relationships from 7 papers.
 - All retained relationships remain complementary-only; none is presented as a validated causal pathway.

@@ -1,6 +1,6 @@
 {
   "status": "complete",
-  "generated_at_utc": "2026-08-28T18:03:43.116012+00:00",
+  "generated_at_utc": "2026-11-20T20:09:07.575854+00:00",
   "table_s1": {
     "generated": true,
     "rows": 19,
@@ -40,8 +40,8 @@
     "data/literature/table_s4_retained_relationships.csv": "f37d4899a96a02792c207a3281826f16791e959951ea1174536babeb8d53a612",
     "data/processed/exploratory_association_statistics.csv": "64e207cb04ca796381f2941f6afb3a4ba5177a00d71fc5f2a26ef5a12e677758"
   },
-  "output": "supplementary_tables_current_manuscript_S1-S4.docx",
-  "output_sha256": "8ac4be3aba5024544369a9bc11b53916e4dcef5884cb22121d431073faf82b6d",
+  "output": "supplementary_tables_S1-S4.docx",
+  "output_sha256": "82dd29dd06487add6d511867af4b96889372c11380ed7db9d0ae0e70616be373",
   "table_s1_csv_sha256": "a0109f2d81d1e8a7055b733868d5cbabd94381897360587f6b08d3f8ea13ffa0",
   "checks": {
     "retained_relationships": 15,

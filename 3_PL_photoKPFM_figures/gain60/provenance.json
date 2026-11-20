@@ -1,0 +1,63 @@
+{
+  "measurement_scope": "Gain-60 top-read PL spectra; historical photoKPFM Gaussian quantities retain their panel-specific definitions.",
+  "source_workbook_sha256": "e09bbee584cd09659579f7ceeacfb26b5c960d80678ba7c2263142f67a15bdf6",
+  "source_workbook_redistributed": false,
+  "sources": [
+    {
+      "path": "data/top_spectra_raw.npz",
+      "sha256": "ab59313675587a966a5814b8e94273038387211942a5890061e93492237968e2"
+    },
+    {
+      "path": "data/well_map.csv",
+      "sha256": "ad7e6e6527c8153b11698b092d9eb4973b1d644ae268918964772d1c98ba9806"
+    },
+    {
+      "path": "data/measurement_metadata.json",
+      "sha256": "1b7239e6403e6f2c9dc04b316afa350c2e7be847f6dac9d474072cd77f73e4c7"
+    },
+    {
+      "path": "../data/raw/photokpfm_measurements.h5",
+      "sha256": "3fcbd977f7efd962040cb51afda504b255722a4b7e7fc6080d1c527d9e523858"
+    },
+    {
+      "path": "../data/processed/initial_phase_kpfm_table.csv",
+      "sha256": "a5a83dc877ab65ce7f45a1436f4835f6afef0dbc8dcfe92e752cb00ae751a07a"
+    },
+    {
+      "path": "../data/processed/matched_pl_photokpfm_metrics.csv",
+      "sha256": "18ea89f44774f85b59f7a63460dfb6a22dc859f76c48c78c513d97737f9b24b2"
+    },
+    {
+      "path": "../scripts/experimental/data_processing.py",
+      "sha256": "a13bcdf93e7d45a66478e8a70deb915343ec9655409dd43214e56166138a2cfe"
+    }
+  ],
+  "current_well_map": "data/well_map.csv",
+  "historical_display_map_differences": [
+    "C9",
+    "D9",
+    "H10"
+  ],
+  "map_note": "The current verified well map preserves the approved gain-60 source mapping. The historical display map differs at three unmatched background wells; historical gain-100 processed data are retained separately. All 13 nominal matches use consistent compositions.",
+  "rendering": {
+    "panels": [
+      "Figure4a",
+      "Figure4b",
+      "FigureS4",
+      "Figure5a",
+      "Figure5b",
+      "FigureS5"
+    ],
+    "png_dpi": 600,
+    "figure4_overlaps": "All 96 solid markers are retained at 91 recipe positions; column 12 is drawn behind column 11 at five shared positions.",
+    "figure5a_marker_area": "36 + 180 * (PL intensity / maximum PL intensity among 13 matches), in points squared; legend uses the same transform.",
+    "figureS5_errors": "Archived delta_SP_se values linked by well ID and rechecked from raw Gaussian fitting.",
+    "assembly": "Six separate plots; no title or panel-letter additions."
+  },
+  "scientific_limits": [
+    "No smoothing, interpolation, baseline subtraction, invented wavelengths, times or ADC ceiling.",
+    "Observed maxima use the 396 recorded centers from455 to850nm inclusive; all416 measured centers remain in the numeric archive.",
+    "No inter-gain count calibration or same-specimen/synchronized PL-photoKPFM interpretation.",
+    "No new PL component fits or structural phase assignments; no reuse of historical q values as gain-60 results."
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "instrument": "Cytation5",
+  "measurement_mode": "top-read fluorescence emission spectrum",
+  "gain": 60,
+  "excitation_center_nm": 405,
+  "excitation_bandwidth_nm": 20,
+  "excitation_literal": "405/20 nm",
+  "recorded_emission_center_range_nm": [
+    455,
+    870
+  ],
+  "emission_optical_bandwidth_nm": 20,
+  "emission_sampling_interval_nm": 1,
+  "emission_start_literal": "455/20 nm",
+  "stored_top_acquisitions": 22,
+  "stored_wells": 96,
+  "stored_channels": 416,
+  "analysis_band_nm_inclusive": [
+    455,
+    850
+  ],
+  "analysis_channel_count": 396,
+  "comparison_acquisition": 22,
+  "comparison_raw_read_number": 64,
+  "timestamps_inferred": false,
+  "signal_scale": "Instrument-export count values; no radiometric or inter-gain calibration applied",
+  "source_workbook_sha256": "e09bbee584cd09659579f7ceeacfb26b5c960d80678ba7c2263142f67a15bdf6",
+  "source_archive": "top_spectra_raw.npz",
+  "extraction_scope": "All recorded top spectra and literal cells from the source workbook; bottom and absorbance read intensities are not included",
+  "raw_cell_policy": "Numeric values, literal cell strings, cell-type codes, source row/column indices and all 455-870 nm channels preserved. Peak and normalization fields in the archive are verified caches, not independent measurements."
+}

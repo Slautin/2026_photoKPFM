@@ -36,11 +36,14 @@ COLORS = {
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Regenerate the experimental PL/photoKPFM publication figures."
+        description="Regenerate the composition map or the historical gain-100 figures."
     )
     parser.add_argument("--data-dir", type=Path, default=DEFAULT_DATA)
     parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--overwrite", action="store_true")
+    parser.add_argument("--plate-map-only", action="store_true", help="Render only the nominal-composition map")
+    parser.add_argument("--plate-map", type=Path, default=ROOT / "gain60/data/well_map.csv",
+                        help="Verified well map used by the current composition-map route")
     return parser.parse_args()
 
 
@@ -672,11 +675,18 @@ def main() -> None:
 
     configure_plotting()
     processed = data_dir / "processed"
+    plate_path = processed / "plate_composition_map.csv"
+    if args.plate_map_only:
+        verified_plate = pd.read_csv(args.plate_map).rename(columns={
+            "well_id": "Well", "nominal_FA_pct": "FA_pct", "nominal_BDA_pct": "BDA_pct", "nominal_PEA_pct": "PEA_pct",
+        })
+        plot_plate_map(verified_plate, supplementary_dir / "FigureS3_plate_composition_map")
+        print(f"Nominal-composition map: {supplementary_dir}")
+        return
     retention_path = processed / "pl_retention_metrics.csv"
     selection_path = processed / "representative_pl_trace_selection.csv"
     matched_path = processed / "matched_pl_photokpfm_metrics.csv"
     association_path = processed / "exploratory_association_statistics.csv"
-    plate_path = processed / "plate_composition_map.csv"
     representative_trace_path = processed / "representative_pl_traces.csv"
     full_trace_path = processed / "all_matched_pl_traces.csv"
     source_paths = [

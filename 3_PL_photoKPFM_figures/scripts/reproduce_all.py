@@ -20,7 +20,8 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--overwrite", action="store_true")
-    parser.add_argument("--skip-validation-analyses", action="store_true")
+    parser.add_argument("--historical-gain100", action="store_true", help="Reproduce the earlier gain-100 plots and analysis")
+    parser.add_argument("--skip-validation-analyses", action="store_true", help="Omit the longer historical spectral checks")
     return parser.parse_args()
 
 
@@ -74,16 +75,14 @@ def main() -> None:
     python = sys.executable
     logs: list[dict[str, object]] = []
     publication_staging = workspace / "_publication_figures"
+    publication_command = [python, "scripts/publication/generate_publication_figures.py", "--out-dir", str(publication_staging)]
+    if not args.historical_gain100:
+        publication_command.extend(["--plate-map-only", "--plate-map", str(ROOT / "gain60/data/well_map.csv")])
 
     logs.append(
         run_stage(
-            "publication_figures",
-            [
-                python,
-                "scripts/publication/generate_publication_figures.py",
-                "--out-dir",
-                str(publication_staging),
-            ],
+            "historical_gain100_figures" if args.historical_gain100 else "composition_map",
+            publication_command,
             workspace,
         )
     )
@@ -101,6 +100,13 @@ def main() -> None:
         workspace / "results" / "audit" / "publication_figures",
     )
     shutil.rmtree(publication_staging)
+    if not args.historical_gain100:
+        gain60_output = workspace / "results" / "gain60"
+        logs.append(run_stage(
+            "gain60_panels",
+            [python, str(ROOT / "gain60" / "reproduce.py"), "--output", str(gain60_output)],
+            workspace,
+        ))
     logs.append(
         run_stage(
             "ternary_photokpfm_panels",
@@ -115,7 +121,7 @@ def main() -> None:
     )
     logs.append(
         run_stage(
-            "supplementary_tables_S1_S4",
+            "supplementary_tables_with_historical_gain100_S4",
             [
                 python,
                 "scripts/publication/generate_supplementary_tables.py",
@@ -124,14 +130,14 @@ def main() -> None:
                     workspace
                     / "results"
                     / "tables"
-                    / "supplementary_tables_current_manuscript_S1-S4.docx"
+                    / "supplementary_tables_S1-S4.docx"
                 ),
                 "--overwrite",
             ],
             workspace,
         )
     )
-    if not args.skip_validation_analyses:
+    if args.historical_gain100 and not args.skip_validation_analyses:
         logs.append(
             run_stage(
                 "pl_metric_validation",
@@ -146,25 +152,26 @@ def main() -> None:
                 workspace,
             )
         )
-    association_dir = workspace / "results" / "validation" / "association_analysis"
-    logs.append(
-        run_stage(
-            "pl_photokpfm_associations",
-            [
-                python,
-                "scripts/analysis/analyze_pl_photokpfm_associations.py",
-                "--matched-csv",
-                "data/processed/matched_pl_photokpfm_metrics.csv",
-                "--phase-csv",
-                "data/processed/initial_phase_kpfm_table.csv",
-                "--literature-relationships",
-                "data/literature/table_s4_retained_relationships.csv",
-                "--out-dir",
-                str(association_dir),
-            ],
-            workspace,
+    if args.historical_gain100:
+        association_dir = workspace / "results" / "validation" / "association_analysis"
+        logs.append(
+            run_stage(
+                "historical_gain100_associations",
+                [
+                    python,
+                    "scripts/analysis/analyze_pl_photokpfm_associations.py",
+                    "--matched-csv",
+                    "data/processed/matched_pl_photokpfm_metrics.csv",
+                    "--phase-csv",
+                    "data/processed/initial_phase_kpfm_table.csv",
+                    "--literature-relationships",
+                    "data/literature/table_s4_retained_relationships.csv",
+                    "--out-dir",
+                    str(association_dir),
+                ],
+                workspace,
+            )
         )
-    )
     graph_dir = workspace / "results" / "source_data" / "evidence_graph"
     logs.append(
         run_stage(
@@ -207,11 +214,10 @@ def main() -> None:
     shutil.rmtree(workspace)
     summary = {
         "status": "passed",
+        "pl_run": "historical_gain100" if args.historical_gain100 else "gain60",
         "source_counts": {
-            "pl_library_rows": csv_rows(ROOT / "data" / "processed" / "pl_retention_metrics.csv"),
-            "matched_pl_photokpfm_rows": csv_rows(
-                ROOT / "data" / "processed" / "matched_pl_photokpfm_metrics.csv"
-            ),
+            "pl_library_rows": csv_rows(ROOT / ("data/processed/pl_retention_metrics.csv" if args.historical_gain100 else "gain60/data/well_map.csv")),
+            "matched_pl_photokpfm_rows": csv_rows(ROOT / ("data/processed/matched_pl_photokpfm_metrics.csv" if args.historical_gain100 else "gain60/data/matched13_panel_source.csv")),
             "retained_literature_relationships": csv_rows(
                 ROOT / "data" / "literature" / "table_s4_retained_relationships.csv"
             ),

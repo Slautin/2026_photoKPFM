@@ -3,5 +3,7 @@ __pycache__/
 .venv/
 .pytest_cache/
 reproduced_results/
+reproduced_results_gain100/
+reproduced_gain60/
 results/intermediate/
 results/validation/

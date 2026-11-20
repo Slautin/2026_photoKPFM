@@ -1,0 +1,72 @@
+{
+  "status": "passed",
+  "top_acquisitions": 22,
+  "wells": 96,
+  "distinct_nominal_compositions": 91,
+  "raw_channels": 416,
+  "analysis_channels": 396,
+  "valid_peak_measurements": 2112,
+  "normalization_eligible_wells": 96,
+  "comparison_acquisition": 22,
+  "comparison_raw_read": 64,
+  "photoKPFM_nominal_matches": 13,
+  "photoKPFM_scan_pairs": 19,
+  "gaussian_reference_check": {
+    "raw_scan_pairs": 19,
+    "nominal_compositions": 13,
+    "figure5_max_abs_difference_V": 8.500145032286355e-17,
+    "s5_exact_after_six_decimal_rounding": true,
+    "s5_fit_error_max_abs_difference_V": 9.020562075079397e-17
+  },
+  "literal_source_cells_match": true,
+  "source_hashes_match": true,
+  "outputs_created": true,
+  "figure_files": [
+    "figures/Figure4a_gain60.svg",
+    "figures/Figure4a_gain60.pdf",
+    "figures/Figure4a_gain60.png",
+    "figures/Figure4b_gain60.svg",
+    "figures/Figure4b_gain60.pdf",
+    "figures/Figure4b_gain60.png",
+    "figures/FigureS4_gain60.svg",
+    "figures/FigureS4_gain60.pdf",
+    "figures/FigureS4_gain60.png",
+    "figures/Figure5a_gain60.svg",
+    "figures/Figure5a_gain60.pdf",
+    "figures/Figure5a_gain60.png",
+    "figures/Figure5b_gain60.svg",
+    "figures/Figure5b_gain60.pdf",
+    "figures/Figure5b_gain60.png",
+    "figures/FigureS5_gain60.svg",
+    "figures/FigureS5_gain60.pdf",
+    "figures/FigureS5_gain60.png"
+  ],
+  "figure_count": 18,
+  "committed_gain60_pngs_match_approved_exports": [
+    {
+      "file": "Figure4a_gain60.png",
+      "approved_source_pixels_and_bytes_match": true
+    },
+    {
+      "file": "Figure4b_gain60.png",
+      "approved_source_pixels_and_bytes_match": true
+    },
+    {
+      "file": "Figure5a_gain60.png",
+      "approved_source_pixels_and_bytes_match": true
+    },
+    {
+      "file": "Figure5b_gain60.png",
+      "approved_source_pixels_and_bytes_match": true
+    },
+    {
+      "file": "FigureS4_gain60.png",
+      "approved_source_pixels_and_bytes_match": true
+    },
+    {
+      "file": "FigureS5_gain60.png",
+      "approved_source_pixels_and_bytes_match": true
+    }
+  ],
+  "approved_reference_directories_published": false
+}

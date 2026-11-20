@@ -1,0 +1,81 @@
+{
+  "primary": {
+    "n": 13,
+    "pearson_r": 0.6962890114066314,
+    "pearson_p": 0.008196825049512524,
+    "pearson_ci_low": -0.1656250540094642,
+    "pearson_ci_high": 0.9150692579384326,
+    "pearson_bootstrap_valid": 10000,
+    "spearman_rho": 0.3626373626373627,
+    "spearman_p": 0.22331572029248178,
+    "partial_spearman_rho": -0.13118956774078058,
+    "partial_spearman_p": 0.7006174423187304,
+    "effective_control_count": 2,
+    "partial_degrees_of_freedom": 9,
+    "new_q_values_reported": false
+  },
+  "descriptor_sensitivities": {
+    "S5_mean_absolute_Gaussian_rounded6": {
+      "n": 13,
+      "pearson_r": 0.6962890114066314,
+      "pearson_p": 0.008196825049512524,
+      "pearson_ci_low": -0.1656250540094642,
+      "pearson_ci_high": 0.9150692579384326,
+      "pearson_bootstrap_valid": 10000,
+      "spearman_rho": 0.3626373626373627,
+      "spearman_p": 0.22331572029248178,
+      "partial_spearman_rho": -0.13118956774078058,
+      "partial_spearman_p": 0.7006174423187304,
+      "effective_control_count": 2,
+      "partial_degrees_of_freedom": 9,
+      "new_q_values_reported": false
+    },
+    "Figure5_absolute_mean_signed_Gaussian": {
+      "n": 13,
+      "pearson_r": 0.6963007268173254,
+      "pearson_p": 0.008195292806301598,
+      "pearson_ci_low": -0.16562091908622062,
+      "pearson_ci_high": 0.9151067623807256,
+      "pearson_bootstrap_valid": 10000,
+      "spearman_rho": 0.3626373626373627,
+      "spearman_p": 0.22331572029248178,
+      "partial_spearman_rho": -0.13118956774078058,
+      "partial_spearman_p": 0.7006174423187304,
+      "effective_control_count": 2,
+      "partial_degrees_of_freedom": 9,
+      "new_q_values_reported": false
+    },
+    "retained_y_sensitivity_only": {
+      "n": 13,
+      "pearson_r": 0.6471192163118412,
+      "pearson_p": 0.016812406089530902,
+      "pearson_ci_low": -0.18855371849171745,
+      "pearson_ci_high": 0.9137522908232413,
+      "pearson_bootstrap_valid": 10000,
+      "spearman_rho": 0.4230769230769231,
+      "spearman_p": 0.14974854155496808,
+      "partial_spearman_rho": -0.14843500512467186,
+      "partial_spearman_p": 0.6631499470287846,
+      "effective_control_count": 2,
+      "partial_degrees_of_freedom": 9,
+      "new_q_values_reported": false
+    }
+  },
+  "bootstrap": {
+    "resamples": 10000,
+    "seed": 20260816,
+    "rng": "NumPy default_rng PCG64",
+    "method": "paired nominal-composition-row percentile bootstrap for Pearson r",
+    "interval_percentiles": [
+      2.5,
+      97.5
+    ]
+  },
+  "partial_spearman": "Rank x, y, PEA and BDA; residualize on intercept and ranked controls; correlate residuals; two-sided t test with n-k-2 degrees of freedom",
+  "rank_method": "first",
+  "rank_category_rules": "Top four means rank <= 4; rank lead means difference >= 5. Display categories are not significance tests.",
+  "cross_library_scope": "13 nominal-composition matches across independently prepared PL and photoKPFM libraries; 19 photoKPFM scan pairs include within-droplet repeated locations",
+  "multiple_testing": "No new 36-test family or q values: new spectral-component fits were not produced. Historical gain-100 q values are not gain-60 statistics.",
+  "measurement_uncertainty": "FigureS5 preserves archived delta_SP_se from the Gaussian fit-center variance aggregation; no new error bars are inferred from PL counts.",
+  "causal_claim_supported": false
+}

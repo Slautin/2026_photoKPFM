@@ -30,7 +30,7 @@ SUMMARY_CSV = ROOT / "data" / "literature" / "table_s3_relationship_summary.csv"
 RELATIONSHIPS_CSV = ROOT / "data" / "literature" / "table_s4_retained_relationships.csv"
 ASSOCIATIONS_CSV = ROOT / "data" / "processed" / "exploratory_association_statistics.csv"
 TABLE_S1_CSV = ROOT / "data" / "processed" / "photokpfm_acquisition_log.csv"
-DEFAULT_OUTPUT = ROOT / "results" / "tables" / "supplementary_tables_current_manuscript_S1-S4.docx"
+DEFAULT_OUTPUT = ROOT / "results" / "tables" / "supplementary_tables_S1-S4.docx"
 
 TABLE_S1_CAPTION = (
     "Table S1. Ternary-library photoKPFM experimental acquisition log. Each row is one paired dark and "
@@ -64,10 +64,11 @@ TABLE_S3_CAPTION = (
 )
 
 TABLE_S4_CAPTION = (
-    "Table S4. Exploratory raw and composition-adjusted PL–photoKPFM association tests. The table reports "
+    "Table S4. Historical gain-100 PL–photoKPFM association tests. The table reports "
     "Pearson and Spearman coefficients, bootstrap confidence intervals, leave-one-out sensitivity, partial "
     "correlations adjusted for nominal PEA and BDA precursor fractions, and Benjamini-Hochberg q-values for "
-    "36 exploratory comparisons. None survived multiplicity correction at q < 0.05. The analyses are "
+    "36 exploratory comparisons from the historical run. None survived multiplicity correction at q < 0.05. "
+    "The gain-60 study has its own peak-intensity association results in gain60/. The analyses here are "
     "descriptive and do not support a causal relationship between the PL and photoKPFM observables. "
     "PL-derived fitted emissive components, where included, are spectral-model outputs and should not be "
     "interpreted as structurally confirmed phase fractions."

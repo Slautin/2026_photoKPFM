@@ -1,11 +1,14 @@
 # Data dictionary
 
+See [gain-60 data](../gain60/) for the current PL dataset and figures. PL tables in `data/processed/` and `data/validation/` describe the earlier gain-100 workflow.
+
 | Path | Rows or shape | Contents |
 |---|---:|---|
 | `data/raw/pl_plate_reader_export.csv` | 43,818 physical rows | Original nonrectangular Cytation 5 export. The analysis uses 22 complete top-read blocks × 96 wells. |
 | `data/raw/photokpfm_measurements.h5` | 9 required datasets | Original ternary-library dark/illuminated photoKPFM acquisitions; detailed shapes are in `DATA_PROVENANCE.md`. |
 | `data/processed/pl_retention_metrics.csv` | 96 | PL peak intensity and retention metrics for the full plate. |
-| `data/processed/plate_composition_map.csv` | 96 | Well-to-nominal-composition lookup for the plate layout. |
+| `gain60/data/well_map.csv` | 96 | Verified nominal preparation map used by the gain-60 analysis and Figure S3. |
+| `data/processed/plate_composition_map.csv` | 96 | Historical lookup retained with the earlier workflow. Its three discrepancies at C9, D9, and H10 were corrected in the verified map. |
 | `data/processed/matched_pl_photokpfm_metrics.csv` | 13 | Nominally composition-matched PL/photoKPFM records used for exploratory comparisons. |
 | `data/processed/initial_phase_kpfm_table.csv` | 13 | Initial PL spectral-component outputs joined to photoKPFM observables. |
 | `data/processed/candidate_rank_comparison.csv` | 13 | Composition ranks for top-read PL peak intensity and absolute photoKPFM response. |
@@ -21,7 +24,7 @@
 | `data/literature/evidence_graph_nodes.csv` | 97 | Canonical evidence-graph nodes. |
 | `data/literature/evidence_graph_edges.csv` | 120 | Canonical evidence-graph edges with DOI, evidence strength, and causal status. |
 | `results/source_data/ternary_photokpfm/` | multiple | Figure 3/S1/S2 panel source data, GP model provenance, and output manifest. |
-| `results/tables/supplementary_tables_current_manuscript_S1-S4.docx` | 19/6/15/36 data rows | Combined, manuscript-numbered Tables S1–S4. |
+| `results/tables/supplementary_tables_S1-S4.docx` | 19/6/15/36 data rows | Combined, manuscript-numbered Tables S1–S4. |
 
 The historical filenames `table_s3_relationship_summary.csv` and `table_s4_retained_relationships.csv` are retained as stable machine-readable source names; in the current combined supplement their contents appear as Tables S2 and S3, respectively.
 

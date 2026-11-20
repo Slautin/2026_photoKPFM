@@ -1,23 +1,22 @@
-# 2026_photoKPFM
+# PL and photoKPFM mapping of a perovskite composition library
 
-This repository contains the supporting workflows and reviewer-facing reproducibility materials for the FAPbI₃–BDAPbI₄–PEA₂PbI₄ combinatorial-library manuscript.
+This repository contains data, figure source tables, and analysis code for the
+FAPbI3-BDAPbI4-PEA2PbI4 combinatorial library.
 
-## Repository organization
+- [Gain-60 PL measurements and plots](3_PL_photoKPFM_figures/gain60/) contain the
+  top-read spectra and the current Figures 4a, 4b, 5a, 5b, S4, and S5.
+- [Figure and table index](3_PL_photoKPFM_figures/docs/MANUSCRIPT_ASSET_INDEX.csv)
+  maps each asset to its inputs and generating script.
+- [Binary photoKPFM notebook](1_photoKPFM_PEA-FAPI.ipynb) and
+  [ternary photoKPFM notebook](2_photoKPFM_ternary_PEA-BDA-FAPI.ipynb) document the
+  corresponding experimental workflows.
 
-- `1_photoKPFM_PEA-FAPI.ipynb`: binary-composition photoKPFM workflow.
-- `2_photoKPFM_ternary_PEA-BDA-FAPI.ipynb`: ternary-composition photoKPFM workflow.
-- `3_PL_photoKPFM_figures/`: complete PL/photoKPFM reproducibility release, including bundled source datasets, analysis and publication scripts, single-panel figure exports, supplementary tables, provenance, and validation records.
+From `3_PL_photoKPFM_figures/`, install the dependencies and run:
 
-## Reproduce the PL/photoKPFM outputs
-
-```powershell
-cd 3_PL_photoKPFM_figures
-py -3.11 -m venv .venv
-& .\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
+```text
 python -m pip install -r requirements.txt
 python scripts/validate_release.py
 python scripts/reproduce_all.py
 ```
 
-See [`3_PL_photoKPFM_figures/README.md`](3_PL_photoKPFM_figures/README.md) for complete usage instructions, dataset descriptions, figure and table mappings, and scientific-scope limitations.
+[Analysis and reproduction guide](3_PL_photoKPFM_figures/README.md)
